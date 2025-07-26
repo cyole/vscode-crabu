@@ -1,0 +1,40 @@
+packages:
+  - webview-ui
+
+catalogs:
+  build:
+    '@tomjs/vscode-extension-webview': ^2.0.0
+    '@vitejs/plugin-vue': ^6.0.0
+    '@vitejs/plugin-vue-jsx': ^5.0.1
+    tsdown: ^0.13.0
+    unocss: ^66.3.3
+    unplugin-auto-import: ^19.3.0
+    unplugin-vue-components: ^28.8.0
+    vite: npm:rolldown-vite@latest
+
+  dev:
+    '@antfu/eslint-config': ^5.0.0
+    '@antfu/ni': ^25.0.0
+    '@vscode/vsce': ^3.6.0
+    bumpp: ^10.2.0
+    eslint: ^9.31.0
+    esno: ^4.8.0
+    pnpm: ^10.13.1
+    reactive-vscode: ^0.3.1
+    typescript: ^5.8.3
+    vscode-ext-gen: ^1.1.0
+
+  frontend:
+    '@vueuse/core': ^13.5.0
+    dayjs: ^1.11.13
+    naive-ui: ^2.42.0
+    vue: ^3.5.18
+
+  types:
+    '@types/node': ^24.1.0
+    '@types/vscode': ^1.102.0
+
+onlyBuiltDependencies:
+  - '@vscode/vsce-sign'
+  - esbuild
+  - keytar

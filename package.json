@@ -1,0 +1,221 @@
+{
+  "publisher": "cyole",
+  "name": "crabu",
+  "displayName": "Crabu",
+  "version": "0.0.1",
+  "private": true,
+  "packageManager": "pnpm@10.13.1",
+  "description": "A vscode extension for Crabu.",
+  "author": "Cyole <i@cyole.me>",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/cyole",
+  "homepage": "https://github.com/cyole/vscode-crabu#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyole/vscode-crabu"
+  },
+  "bugs": {
+    "url": "https://github.com/cyole/vscode-crabu/issues"
+  },
+  "sponsor": {
+    "url": "https://github.com/sponsors/cyole"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/index.js",
+  "icon": "resources/icon.png",
+  "files": [
+    "LICENSE.md",
+    "dist/**/*",
+    "resources/*"
+  ],
+  "engines": {
+    "vscode": "^1.102.0"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "crabu.refreshApiTreeView",
+        "title": "Refresh API Tree View",
+        "icon": "$(refresh)",
+        "category": "Crabu"
+      },
+      {
+        "command": "crabu.searchApi",
+        "title": "Search API",
+        "icon": "$(search)",
+        "category": "Crabu"
+      },
+      {
+        "command": "crabu.showCrabuWebview",
+        "title": "Show Crabu Webview",
+        "icon": "$(globe)",
+        "category": "Crabu"
+      },
+      {
+        "command": "crabu.getApiTreeDataUpdateTime",
+        "title": "Get API Tree Data Update Time",
+        "icon": "$(clock)",
+        "category": "Crabu"
+      },
+      {
+        "command": "crabu.addToMock",
+        "title": "Add API to Mock",
+        "icon": "$(plus)",
+        "enablement": "view == apiTreeView && viewItem == apiItem"
+      },
+      {
+        "command": "crabu.genRequestCode",
+        "title": "Generate Request Code",
+        "icon": "$(code)",
+        "enablement": "view == apiTreeView && viewItem == apiItem"
+      },
+      {
+        "command": "crabu.genTypeScriptTypes",
+        "title": "Generate TypeScript Types",
+        "icon": "$(file-code)",
+        "enablement": "view == apiTreeView && viewItem == apiItem"
+      },
+      {
+        "command": "crabu.compareWithLatestVersion",
+        "title": "Compare with Latest Version",
+        "icon": "$(diff)",
+        "enablement": "view == apiTreeView && viewItem == apiItem"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "crabu.yapiBaseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "yapi文档的baseUrl"
+        },
+        "crabu.yapiProjects": {
+          "type": "array",
+          "default": [],
+          "description": "yapi项目列表",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "description": "项目id"
+              },
+              "name": {
+                "type": "string",
+                "description": "项目名称"
+              },
+              "token": {
+                "type": "string",
+                "description": "访问项目的api token"
+              }
+            }
+          }
+        }
+      }
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "crabu",
+          "title": "Crabu",
+          "icon": "resources/api.svg"
+        }
+      ]
+    },
+    "views": {
+      "crabu": [
+        {
+          "id": "apiTreeView",
+          "name": "API Tree View",
+          "icon": "resources/api.svg"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "apiTreeView",
+        "contents": "请先在设置中配置项目列表\n [打开设置](command:workbench.action.openSettings?%5B%22crabu.yapiProjects%22%5D)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "crabu.searchApi",
+          "when": "view == apiTreeView",
+          "group": "navigation"
+        },
+        {
+          "command": "crabu.refreshApiTreeView",
+          "when": "view == apiTreeView",
+          "group": "navigation"
+        },
+        {
+          "command": "crabu.showCrabuWebview",
+          "when": "view == apiTreeView",
+          "group": "navigation"
+        },
+        {
+          "command": "crabu.getApiTreeDataUpdateTime",
+          "when": "view == apiTreeView",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "crabu.addToMock",
+          "when": "viewItem == apiItem",
+          "group": "inline"
+        },
+        {
+          "command": "crabu.genRequestCode",
+          "when": "viewItem == apiItem",
+          "group": "inline"
+        },
+        {
+          "command": "crabu.genTypeScriptTypes",
+          "when": "viewItem == apiItem",
+          "group": "inline"
+        },
+        {
+          "command": "crabu.compareWithLatestVersion",
+          "when": "viewItem == apiItem",
+          "group": "inline"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsdown src/index.ts --external vscode",
+    "dev": "nr build --watch --sourcemap",
+    "prepare": "nr update",
+    "update": "vscode-ext-gen --output src/generated/meta.ts",
+    "lint": "eslint .",
+    "vscode:prepublish": "nr build",
+    "publish": "vsce publish --no-dependencies",
+    "pack": "vsce package --no-dependencies",
+    "typecheck": "tsc --noEmit",
+    "release": "bumpp && nr publish"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "catalog:dev",
+    "@antfu/ni": "catalog:dev",
+    "@types/node": "catalog:types",
+    "@types/vscode": "^1.102.0",
+    "@vscode/vsce": "catalog:dev",
+    "bumpp": "catalog:dev",
+    "eslint": "catalog:dev",
+    "esno": "catalog:dev",
+    "pnpm": "catalog:dev",
+    "reactive-vscode": "catalog:dev",
+    "tsdown": "catalog:build",
+    "typescript": "catalog:dev",
+    "vite": "catalog:build",
+    "vscode-ext-gen": "catalog:dev"
+  }
+}
