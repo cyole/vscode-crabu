@@ -17,7 +17,7 @@ catalogs:
     '@antfu/ni': ^25.0.0
     '@vscode/vsce': ^3.6.0
     bumpp: ^10.2.0
-    eslint: ^9.31.0
+    eslint: ^9.32.0
     esno: ^4.8.0
     pnpm: ^10.13.1
     reactive-vscode: ^0.3.1
