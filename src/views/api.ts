@@ -1,7 +1,7 @@
 import type { TreeViewNode } from 'reactive-vscode'
 import type { ScopedConfigKeyTypeMap } from '../generated/meta'
 import { createSingletonComposable, executeCommand, extensionContext, ref, useCommand, useTreeView, watchEffect } from 'reactive-vscode'
-import { ThemeIcon, TreeItemCollapsibleState, window } from 'vscode'
+import { TreeItemCollapsibleState, window } from 'vscode'
 import { config } from '../config'
 import { apiListMenu } from '../constants/api'
 import { storageApiTreeDataKey, storageApiTreeDataUpdateAtKey } from '../constants/storage'
