@@ -93,4 +93,6 @@ export interface ApiDetail {
   edit_uid: number
   /** 返回数据是否为 json-schema */
   res_body_is_json_schema: boolean
+  /** 接口标签 */
+  tag: string[]
 }

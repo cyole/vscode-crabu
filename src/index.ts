@@ -1,5 +1,6 @@
 import type { MockApiData, YapiApiItem } from './types'
 import { defineExtension, useCommand } from 'reactive-vscode'
+import { window } from 'vscode'
 import { genRequestCode, genTypeScriptTypes } from './gen'
 import { commands } from './generated/meta'
 import { logger } from './utils'
@@ -27,6 +28,14 @@ const { activate, deactivate } = defineExtension(() => {
     }
 
     const code = await genRequestCode(api)
+    // 插入到当前文件光标处
+    const editor = window.activeTextEditor
+    if (editor) {
+      editor.edit((editBuilder) => {
+        editBuilder.insert(editor.selection.start, `${code}\n`)
+      })
+    }
+
     logger.info('Generated request code:', code)
   })
 
