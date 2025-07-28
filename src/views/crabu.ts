@@ -1,6 +1,6 @@
 import type { Nullable } from 'reactive-vscode'
 import type { WebviewPanel } from 'vscode'
-import type { YapiApiData } from './api'
+import type { YapiApiData } from '../types'
 import getHtml from '@tomjs/vscode-extension-webview'
 import { useWebviewPanel } from 'reactive-vscode'
 import { ViewColumn } from 'vscode'

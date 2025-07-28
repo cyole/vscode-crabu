@@ -1,5 +1,4 @@
-import type { YapiApiData } from './views/api'
-import type { MockApiData } from './views/mock'
+import type { MockApiData, YapiApiData } from './types'
 import { defineExtension, useCommand } from 'reactive-vscode'
 import { genRequestCode, genTypeScriptTypes } from './gen'
 import { commands } from './generated/meta'
