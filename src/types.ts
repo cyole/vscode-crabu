@@ -4,15 +4,7 @@ export interface FetchResponse<T> {
   errmsg: string
 }
 
-export interface YapiApiDetail {
-  title: string
-  path: string
-  method: string
-  _id: string
-  catid: string
-}
-
-export interface YapiApiData {
+export interface YapiApiItem {
   title: string
   path: string
   method: string
@@ -25,7 +17,7 @@ export interface YapiApiData {
 export interface YapiMenuData {
   name: string
   desc?: string
-  list: YapiApiData[]
+  list: YapiApiItem[]
 }
 
 export interface MockApiData {
@@ -62,7 +54,7 @@ export interface ApiReqQuery {
   desc: string
 }
 
-export interface ApiDetailInfo {
+export interface ApiDetail {
   /** id */
   _id: string
   /** 项目id */

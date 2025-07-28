@@ -1,4 +1,4 @@
-import type { MockApiData, YapiApiData } from './types'
+import type { MockApiData, YapiApiItem } from './types'
 import { defineExtension, useCommand } from 'reactive-vscode'
 import { genRequestCode, genTypeScriptTypes } from './gen'
 import { commands } from './generated/meta'
@@ -18,7 +18,7 @@ const { activate, deactivate } = defineExtension(() => {
     }
 
     const api = event.treeItem.contextValue === 'apiItem'
-      ? event.treeItem.apiData as YapiApiData
+      ? event.treeItem.apiData as YapiApiItem
       : transformMockToApiData(event.treeItem.mockItem as MockApiData)
 
     if (!api) {
@@ -37,7 +37,7 @@ const { activate, deactivate } = defineExtension(() => {
     }
 
     const api = 'apiData' in event.treeItem
-      ? event.treeItem.apiData as YapiApiData
+      ? event.treeItem.apiData as YapiApiItem
       : transformMockToApiData(event.treeItem.mockItem as MockApiData)
 
     if (!api) {

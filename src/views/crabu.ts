@@ -1,13 +1,13 @@
 import type { Nullable } from 'reactive-vscode'
 import type { WebviewPanel } from 'vscode'
-import type { YapiApiData } from '../types'
+import type { YapiApiItem } from '../types'
 import getHtml from '@tomjs/vscode-extension-webview'
 import { useWebviewPanel } from 'reactive-vscode'
 import { ViewColumn } from 'vscode'
 
 let openedPanel: Nullable<WebviewPanel>
 
-export async function useApiDetailView(apiData?: YapiApiData) {
+export async function useApiDetailView(apiData?: YapiApiItem) {
   function getWebviewContent() {
     if (!apiData) {
       return getHtml({ serverUrl: 'http://localhost' })

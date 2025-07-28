@@ -1,6 +1,6 @@
 import type { TreeViewNode } from 'reactive-vscode'
 import type { ScopedConfigKeyTypeMap } from '../generated/meta'
-import type { YapiApiData, YapiMenuData } from '../types'
+import type { YapiApiItem, YapiMenuData } from '../types'
 import { createSingletonComposable, executeCommand, extensionContext, ref, useCommand, useTreeView, watchEffect } from 'reactive-vscode'
 import { TreeItemCollapsibleState, window } from 'vscode'
 import { config } from '../config'
@@ -108,7 +108,7 @@ export const useApiTreeView = createSingletonComposable(async () => {
       return
     }
 
-    const api = event.treeItem.apiData as YapiApiData
+    const api = event.treeItem.apiData as YapiApiItem
 
     await fetch(`${crabuApiBaseUrl}/interface/add/${api.project_id}/${api._id}`, { method: 'POST' })
     await executeCommand(commands.refreshMockTreeView)
