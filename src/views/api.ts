@@ -3,10 +3,11 @@ import type { ScopedConfigKeyTypeMap } from '../generated/meta'
 import { createSingletonComposable, executeCommand, extensionContext, ref, useCommand, useTreeView, watchEffect } from 'reactive-vscode'
 import { TreeItemCollapsibleState, window } from 'vscode'
 import { config } from '../config'
-import { apiListMenu } from '../constants/api'
+import { apiListMenu, crabuApiBaseUrl } from '../constants/api'
 import { storageApiTreeDataKey, storageApiTreeDataUpdateAtKey } from '../constants/storage'
 import { commands } from '../generated/meta'
 import { logger, request } from '../utils'
+import { useApiDetailView } from './crabu'
 
 export interface YapiApiData {
   title: string
@@ -114,6 +115,21 @@ export const useApiTreeView = createSingletonComposable(async () => {
     else {
       window.showInformationMessage('API数据未更新')
     }
+  })
+
+  useCommand(commands.addToMock, async (event) => {
+    logger.info('Adding API to mock:', JSON.stringify(event, null, 2))
+
+    if (!event.treeItem || !event.treeItem.apiData) {
+      logger.error('No API data found in the event tree item.')
+      return
+    }
+
+    const api = event.treeItem.apiData as YapiApiData
+
+    await fetch(`${crabuApiBaseUrl}/interface/add/${api.project_id}/${api._id}`, { method: 'POST' })
+    await executeCommand(commands.refreshMockTreeView)
+    useApiDetailView(api)
   })
 
   useCommand(commands.searchApi, async () => {

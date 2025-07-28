@@ -45,6 +45,12 @@
         "category": "Crabu"
       },
       {
+        "command": "crabu.refreshMockTreeView",
+        "title": "Refresh Mock Tree View",
+        "icon": "$(refresh)",
+        "category": "Crabu"
+      },
+      {
         "command": "crabu.searchApi",
         "title": "Search API",
         "icon": "$(search)",
@@ -67,6 +73,17 @@
         "title": "Add API to Mock",
         "icon": "$(plus)",
         "enablement": "view == apiTreeView && viewItem == apiItem"
+      },
+      {
+        "command": "crabu.removeFromMock",
+        "title": "Remove API from Mock",
+        "icon": "$(notebook-delete-cell)",
+        "enablement": "view == mockTreeView"
+      },
+      {
+        "command": "crabu.showCrabuWebviewWithMock",
+        "title": "Show Crabu Webview with Mock",
+        "enablement": "view == mockTreeView"
       },
       {
         "command": "crabu.genRequestCode",
@@ -131,8 +148,13 @@
     "views": {
       "crabu": [
         {
+          "id": "mockTreeView",
+          "name": "Mocking",
+          "icon": "resources/api.svg"
+        },
+        {
           "id": "apiTreeView",
-          "name": "API Tree View",
+          "name": "API",
           "icon": "resources/api.svg"
         }
       ]
@@ -141,6 +163,10 @@
       {
         "view": "apiTreeView",
         "contents": "请先在设置中配置项目列表\n [打开设置](command:workbench.action.openSettings?%5B%22crabu.yapiProjects%22%5D)"
+      },
+      {
+        "view": "mockTreeView",
+        "contents": "请在Crabu中添加需要mock的接口\n [打开Crabu](command:crabu.showCrabuWebview)"
       }
     ],
     "menus": {
@@ -164,6 +190,11 @@
           "command": "crabu.getApiTreeDataUpdateTime",
           "when": "view == apiTreeView",
           "group": "navigation"
+        },
+        {
+          "command": "crabu.refreshMockTreeView",
+          "when": "view == mockTreeView",
+          "group": "navigation"
         }
       ],
       "view/item/context": [
@@ -185,6 +216,11 @@
         {
           "command": "crabu.compareWithLatestVersion",
           "when": "viewItem == apiItem",
+          "group": "inline"
+        },
+        {
+          "command": "crabu.removeFromMock",
+          "when": "view == mockTreeView",
           "group": "inline"
         }
       ]
