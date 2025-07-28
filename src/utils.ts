@@ -1,15 +1,10 @@
 import type { Webview } from 'vscode'
+import type { FetchResponse } from './types'
 import { useLogger } from 'reactive-vscode'
 import { Uri } from 'vscode'
 import { displayName } from './generated/meta'
 
 export const logger = useLogger(displayName)
-
-interface YapiResponse<T> {
-  data: T
-  errcode: number
-  errmsg: string
-}
 
 export async function request<T>(url: string, query: Record<string, string>): Promise<T> {
   const queryString = Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')
@@ -20,7 +15,7 @@ export async function request<T>(url: string, query: Record<string, string>): Pr
     headers: {
       'Content-Type': 'application/json',
     },
-  }).then(res => res.json()) as YapiResponse<T>
+  }).then(res => res.json()) as FetchResponse<T>
 
   return data.data
 }

@@ -1,4 +1,5 @@
 import type { TreeViewNode } from 'reactive-vscode'
+import type { MockApiData } from '../types'
 import { createSingletonComposable, ref, useCommand, useTreeView } from 'reactive-vscode'
 import { TreeItemCollapsibleState, window } from 'vscode'
 import { crabuApiBaseUrl } from '../constants/api'
@@ -6,10 +7,18 @@ import { commands } from '../generated/meta'
 import { logger } from '../utils'
 import { useApiDetailView } from './crabu'
 
-export interface MockApiData {
-  label: string
-  key: string
-  children?: MockApiData[]
+export function transformMockToApiData(mockItem: MockApiData) {
+  const apiInfo = mockItem.key.split('/')
+  const apiData = {
+    project_id: Number(apiInfo?.[0]),
+    catid: apiInfo?.[1],
+    _id: apiInfo?.[2],
+    title: mockItem.label,
+    path: '',
+    method: 'POST',
+  }
+
+  return apiData
 }
 
 function handleData(data: MockApiData[]) {
@@ -21,7 +30,7 @@ function handleData(data: MockApiData[]) {
       treeItem: {
         label: item.label,
         collapsibleState: isLeaf ? TreeItemCollapsibleState.None : TreeItemCollapsibleState.Collapsed,
-        contextValue: 'mockNode',
+        contextValue: isLeaf ? 'mockItem' : 'mockNode',
         mockItem: item,
         command: {
           command: commands.showCrabuWebviewWithMock,
@@ -76,22 +85,12 @@ export const useMockTreeView = createSingletonComposable(async () => {
       return
     }
 
-    const apiInfo = mockItem.key.split('/')
-    const apiData = {
-      project_id: Number(apiInfo?.[0]),
-      catid: apiInfo?.[1],
-      _id: apiInfo?.[2],
-      title: mockItem.label,
-      path: '',
-      method: 'POST',
-    }
+    const apiData = transformMockToApiData(mockItem)
 
     useApiDetailView(apiData)
   })
 
   useCommand(commands.removeFromMock, async (event) => {
-    logger.info('Removing API from mock:', JSON.stringify(event, null, 2))
-
     if (!event.treeItem || !event.treeItem.mockItem) {
       logger.error('No mock item found in the event.')
       return

@@ -89,13 +89,13 @@
         "command": "crabu.genRequestCode",
         "title": "Generate Request Code",
         "icon": "$(code)",
-        "enablement": "view == apiTreeView && viewItem == apiItem"
+        "enablement": "viewItem == apiItem || viewItem == mockItem"
       },
       {
         "command": "crabu.genTypeScriptTypes",
         "title": "Generate TypeScript Types",
         "icon": "$(file-code)",
-        "enablement": "view == apiTreeView && viewItem == apiItem"
+        "enablement": "viewItem == apiItem || viewItem == mockItem"
       },
       {
         "command": "crabu.compareWithLatestVersion",
@@ -205,12 +205,12 @@
         },
         {
           "command": "crabu.genRequestCode",
-          "when": "viewItem == apiItem",
+          "when": "viewItem == apiItem || viewItem == mockItem",
           "group": "inline"
         },
         {
           "command": "crabu.genTypeScriptTypes",
-          "when": "viewItem == apiItem",
+          "when": "viewItem == apiItem || viewItem == mockItem",
           "group": "inline"
         },
         {
@@ -220,7 +220,7 @@
         },
         {
           "command": "crabu.removeFromMock",
-          "when": "view == mockTreeView && viewItem == mockNode",
+          "when": "view == mockTreeView && (viewItem == mockNode || viewItem == mockItem)",
           "group": "inline"
         }
       ]

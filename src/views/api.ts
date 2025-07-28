@@ -1,5 +1,6 @@
 import type { TreeViewNode } from 'reactive-vscode'
 import type { ScopedConfigKeyTypeMap } from '../generated/meta'
+import type { YapiApiData, YapiMenuData } from '../types'
 import { createSingletonComposable, executeCommand, extensionContext, ref, useCommand, useTreeView, watchEffect } from 'reactive-vscode'
 import { TreeItemCollapsibleState, window } from 'vscode'
 import { config } from '../config'
@@ -8,22 +9,6 @@ import { storageApiTreeDataKey, storageApiTreeDataUpdateAtKey } from '../constan
 import { commands } from '../generated/meta'
 import { logger, request } from '../utils'
 import { useApiDetailView } from './crabu'
-
-export interface YapiApiData {
-  title: string
-  path: string
-  method: string
-  _id: string
-  catid: string
-  project_id: number
-  project_token?: string
-}
-
-export interface YapiMenuData {
-  name: string
-  desc?: string
-  list: YapiApiData[]
-}
 
 type Project = ScopedConfigKeyTypeMap['yapiProjects'][number]
 
@@ -118,8 +103,6 @@ export const useApiTreeView = createSingletonComposable(async () => {
   })
 
   useCommand(commands.addToMock, async (event) => {
-    logger.info('Adding API to mock:', JSON.stringify(event, null, 2))
-
     if (!event.treeItem || !event.treeItem.apiData) {
       logger.error('No API data found in the event tree item.')
       return

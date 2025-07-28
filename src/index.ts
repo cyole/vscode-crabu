@@ -1,12 +1,54 @@
+import type { YapiApiData } from './views/api'
+import type { MockApiData } from './views/mock'
 import { defineExtension, useCommand } from 'reactive-vscode'
+import { genRequestCode, genTypeScriptTypes } from './gen'
 import { commands } from './generated/meta'
+import { logger } from './utils'
 import { useApiTreeView } from './views/api'
 import { useApiDetailView } from './views/crabu'
-import { useMockTreeView } from './views/mock'
+import { transformMockToApiData, useMockTreeView } from './views/mock'
 
 const { activate, deactivate } = defineExtension(() => {
   useApiTreeView()
   useMockTreeView()
+
+  useCommand(commands.genRequestCode, async (event) => {
+    if (!event.treeItem) {
+      logger.error('No API data found in the event tree item.')
+      return
+    }
+
+    const api = event.treeItem.contextValue === 'apiItem'
+      ? event.treeItem.apiData as YapiApiData
+      : transformMockToApiData(event.treeItem.mockItem as MockApiData)
+
+    if (!api) {
+      logger.error('No API data found in the event tree item.')
+      return
+    }
+
+    const code = await genRequestCode(api)
+    logger.info('Generated request code:', code)
+  })
+
+  useCommand(commands.genTypeScriptTypes, async (event) => {
+    if (!event.treeItem) {
+      logger.error('No API data found in the event tree item.')
+      return
+    }
+
+    const api = 'apiData' in event.treeItem
+      ? event.treeItem.apiData as YapiApiData
+      : transformMockToApiData(event.treeItem.mockItem as MockApiData)
+
+    if (!api) {
+      logger.error('No API data found in the event tree item.')
+      return
+    }
+
+    const code = await genTypeScriptTypes(api)
+    logger.info('Generated TypeScript types:', code)
+  })
 
   useCommand(commands.showCrabuWebview, useApiDetailView)
 })
