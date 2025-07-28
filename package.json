@@ -78,12 +78,12 @@
         "command": "crabu.removeFromMock",
         "title": "Remove API from Mock",
         "icon": "$(notebook-delete-cell)",
-        "enablement": "view == mockTreeView"
+        "enablement": "view == mockTreeView && viewItem == mockNode"
       },
       {
         "command": "crabu.showCrabuWebviewWithMock",
         "title": "Show Crabu Webview with Mock",
-        "enablement": "view == mockTreeView"
+        "category": "Crabu"
       },
       {
         "command": "crabu.genRequestCode",
@@ -220,7 +220,7 @@
         },
         {
           "command": "crabu.removeFromMock",
-          "when": "view == mockTreeView",
+          "when": "view == mockTreeView && viewItem == mockNode",
           "group": "inline"
         }
       ]

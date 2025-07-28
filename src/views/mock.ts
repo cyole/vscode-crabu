@@ -4,6 +4,7 @@ import { TreeItemCollapsibleState, window } from 'vscode'
 import { crabuApiBaseUrl } from '../constants/api'
 import { commands } from '../generated/meta'
 import { logger } from '../utils'
+import { useApiDetailView } from './crabu'
 
 export interface MockApiData {
   label: string
@@ -20,15 +21,13 @@ function handleData(data: MockApiData[]) {
       treeItem: {
         label: item.label,
         collapsibleState: isLeaf ? TreeItemCollapsibleState.None : TreeItemCollapsibleState.Collapsed,
-        contextValue: isLeaf ? 'mockItem' : undefined,
+        contextValue: 'mockNode',
         mockItem: item,
-        command: isLeaf
-          ? {
-              command: commands.showCrabuWebviewWithMock,
-              title: '打开',
-              arguments: [item.key],
-            }
-          : undefined,
+        command: {
+          command: commands.showCrabuWebviewWithMock,
+          title: '查看',
+          arguments: [item],
+        },
       },
       children: isLeaf ? undefined : handleData(item.children!),
     }
@@ -71,8 +70,23 @@ export const useMockTreeView = createSingletonComposable(async () => {
   await refreshMockTreeView()
 
   useCommand(commands.refreshMockTreeView, refreshMockTreeView)
-  useCommand(commands.showCrabuWebviewWithMock, (key) => {
-    logger.info(key, '==========')
+  useCommand(commands.showCrabuWebviewWithMock, (mockItem: MockApiData) => {
+    if (!mockItem) {
+      logger.error('No mock item found in the event.')
+      return
+    }
+
+    const apiInfo = mockItem.key.split('/')
+    const apiData = {
+      project_id: Number(apiInfo?.[0]),
+      catid: apiInfo?.[1],
+      _id: apiInfo?.[2],
+      title: mockItem.label,
+      path: '',
+      method: 'POST',
+    }
+
+    useApiDetailView(apiData)
   })
 
   useCommand(commands.removeFromMock, async (event) => {
