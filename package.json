@@ -69,21 +69,28 @@
         "category": "Crabu"
       },
       {
-        "command": "crabu.addToMock",
+        "command": "crabu.addApiToMock",
         "title": "Add API to Mock",
         "icon": "$(plus)",
         "enablement": "view == apiTreeView && viewItem == apiItem"
       },
       {
+        "command": "crabu.addApiGroupToMock",
+        "title": "Add API Group to Mock",
+        "icon": "$(plus)",
+        "enablement": "view == apiTreeView && viewItem == apiGroup"
+      },
+      {
         "command": "crabu.removeFromMock",
         "title": "Remove API from Mock",
         "icon": "$(notebook-delete-cell)",
-        "enablement": "view == mockTreeView && viewItem == mockNode"
+        "enablement": "view == mockTreeView && (viewItem == mockNode || viewItem == mockItem)"
       },
       {
         "command": "crabu.showCrabuWebviewWithMock",
         "title": "Show Crabu Webview with Mock",
-        "category": "Crabu"
+        "icon": "$(globe)",
+        "enablement": "view == mockTreeView && (viewItem == mockNode || viewItem == mockItem)"
       },
       {
         "command": "crabu.genRequestCode",
@@ -183,7 +190,7 @@
         },
         {
           "command": "crabu.showCrabuWebview",
-          "when": "view == apiTreeView",
+          "when": "view == mockTreeView",
           "group": "navigation"
         },
         {
@@ -199,8 +206,13 @@
       ],
       "view/item/context": [
         {
-          "command": "crabu.addToMock",
+          "command": "crabu.addApiToMock",
           "when": "viewItem == apiItem",
+          "group": "inline"
+        },
+        {
+          "command": "crabu.addApiGroupToMock",
+          "when": "viewItem == apiGroup",
           "group": "inline"
         },
         {
@@ -220,6 +232,11 @@
         },
         {
           "command": "crabu.removeFromMock",
+          "when": "view == mockTreeView && (viewItem == mockNode || viewItem == mockItem)",
+          "group": "inline"
+        },
+        {
+          "command": "crabu.showCrabuWebviewWithMock",
           "when": "view == mockTreeView && (viewItem == mockNode || viewItem == mockItem)",
           "group": "inline"
         }

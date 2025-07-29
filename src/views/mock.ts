@@ -32,11 +32,6 @@ function handleData(data: MockApiData[]) {
         collapsibleState: isLeaf ? TreeItemCollapsibleState.None : TreeItemCollapsibleState.Collapsed,
         contextValue: isLeaf ? 'mockItem' : 'mockNode',
         mockItem: item,
-        command: {
-          command: commands.showCrabuWebviewWithMock,
-          title: '查看',
-          arguments: [item],
-        },
       },
       children: isLeaf ? undefined : handleData(item.children!),
     }
@@ -79,12 +74,13 @@ export const useMockTreeView = createSingletonComposable(async () => {
   await refreshMockTreeView()
 
   useCommand(commands.refreshMockTreeView, refreshMockTreeView)
-  useCommand(commands.showCrabuWebviewWithMock, (mockItem: MockApiData) => {
-    if (!mockItem) {
+  useCommand(commands.showCrabuWebviewWithMock, (event) => {
+    if (!event.treeItem || !event.treeItem.mockItem) {
       logger.error('No mock item found in the event.')
       return
     }
 
+    const mockItem = event.treeItem.mockItem as MockApiData
     const apiData = transformMockToApiData(mockItem)
 
     useApiDetailView(apiData)

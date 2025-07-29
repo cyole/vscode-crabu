@@ -49,6 +49,7 @@ export const useApiTreeView = createSingletonComposable(async () => {
       treeItem: {
         label: group.name,
         description: group.desc || '',
+        contextValue: 'apiGroup',
         collapsibleState: TreeItemCollapsibleState.Collapsed,
       },
       children: group.list.map((item) => {
@@ -102,7 +103,7 @@ export const useApiTreeView = createSingletonComposable(async () => {
     }
   })
 
-  useCommand(commands.addToMock, async (event) => {
+  useCommand(commands.addApiToMock, async (event) => {
     if (!event.treeItem || !event.treeItem.apiData) {
       logger.error('No API data found in the event tree item.')
       return
@@ -157,7 +158,7 @@ export const useApiTreeView = createSingletonComposable(async () => {
 
     const action = await window.showQuickPick(
       [
-        { label: '添加到Mock', value: commands.addToMock },
+        { label: '添加到Mock', value: commands.addApiToMock },
         { label: '生成请求代码', value: commands.genRequestCode },
         { label: '生成TypeScript类型', value: commands.genTypeScriptTypes },
         { label: '对比最新版本', value: commands.compareWithLatestVersion },
