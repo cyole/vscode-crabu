@@ -68,7 +68,7 @@ importers:
         specifier: catalog:types
         version: 24.1.0
       '@types/vscode':
-        specifier: ^1.102.0
+        specifier: ^1.99.3
         version: 1.102.0
       '@vscode/vsce':
         specifier: catalog:dev

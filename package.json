@@ -31,7 +31,7 @@
     "resources/*"
   ],
   "engines": {
-    "vscode": "^1.102.0"
+    "vscode": "^1.99.3"
   },
   "activationEvents": [
     "onStartupFinished"
@@ -301,7 +301,7 @@
     "@antfu/ni": "catalog:dev",
     "@tomjs/vscode-extension-webview": "catalog:build",
     "@types/node": "catalog:types",
-    "@types/vscode": "^1.102.0",
+    "@types/vscode": "^1.99.3",
     "@vscode/vsce": "catalog:dev",
     "bumpp": "catalog:dev",
     "eslint": "catalog:dev",
