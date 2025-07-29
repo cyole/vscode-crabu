@@ -20,22 +20,24 @@ A VS Code extension for managing and generating code from YAPI APIs.
 
 <!-- commands -->
 
-| Command                          | Title                                |
-| -------------------------------- | ------------------------------------ |
-| `crabu.refreshApiTreeView`       | Crabu: Refresh API Tree View         |
-| `crabu.refreshMockTreeView`      | Crabu: Refresh Mock Tree View        |
-| `crabu.searchApi`                | Crabu: Search API                    |
-| `crabu.searchApiGroup`           | Crabu: Search API Group              |
-| `crabu.showCrabuWebview`         | Crabu: Show Crabu Webview            |
-| `crabu.getApiTreeDataUpdateTime` | Crabu: Get API Tree Data Update Time |
-| `crabu.switchMockStatus`         | Crabu: Switch Mock Status            |
-| `crabu.addApiToMock`             | Add API to Mock                      |
-| `crabu.addApiGroupToMock`        | Add API Group to Mock                |
-| `crabu.removeFromMock`           | Remove API from Mock                 |
-| `crabu.showCrabuWebviewWithMock` | Show Crabu Webview with Mock         |
-| `crabu.genRequestCode`           | Generate Request Code                |
-| `crabu.genTypeScriptTypes`       | Generate TypeScript Types            |
-| `crabu.compareWithLatestVersion` | Compare with Latest Version          |
+| Command                           | Title                                |
+| --------------------------------- | ------------------------------------ |
+| `crabu.refreshApiTreeView`        | Crabu: Refresh API Tree View         |
+| `crabu.refreshMockTreeView`       | Crabu: Refresh Mock Tree View        |
+| `crabu.searchApi`                 | Crabu: Search API                    |
+| `crabu.searchApiGroup`            | Crabu: Search API Group              |
+| `crabu.showCrabuWebview`          | Crabu: Show Crabu Webview            |
+| `crabu.getApiTreeDataUpdateTime`  | Crabu: Get API Tree Data Update Time |
+| `crabu.switchMockStatus`          | Crabu: Switch Mock Status            |
+| `crabu.addApiToMock`              | Add API to Mock                      |
+| `crabu.addApiToMockByUrl`         | Crabu: Add API to Mock by Yapi Url   |
+| `crabu.addApiGroupToMock`         | Add API Group to Mock                |
+| `crabu.removeFromMock`            | Remove API from Mock                 |
+| `crabu.showCrabuWebviewWithMock`  | Show Crabu Webview with Mock         |
+| `crabu.updateMockToLatestVersion` | Update Mock to Latest Version        |
+| `crabu.genRequestCode`            | Generate Request Code                |
+| `crabu.genTypeScriptTypes`        | Generate TypeScript Types            |
+| `crabu.compareWithLatestVersion`  | Compare with Latest Version          |
 
 <!-- commands -->
 

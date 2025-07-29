@@ -89,6 +89,12 @@
         "enablement": "view == apiTreeView && viewItem == apiItem"
       },
       {
+        "command": "crabu.addApiToMockByUrl",
+        "title": "Add API to Mock by Yapi Url",
+        "icon": "$(plus)",
+        "category": "Crabu"
+      },
+      {
         "command": "crabu.addApiGroupToMock",
         "title": "Add API Group to Mock",
         "icon": "$(plus)",
@@ -105,6 +111,12 @@
         "title": "Show Crabu Webview with Mock",
         "icon": "$(globe)",
         "enablement": "view == mockTreeView && (viewItem == mockNode || viewItem == mockItem)"
+      },
+      {
+        "command": "crabu.updateMockToLatestVersion",
+        "title": "Update Mock to Latest Version",
+        "icon": "$(refresh)",
+        "enablement": "view == mockTreeView && viewItem == mockItem"
       },
       {
         "command": "crabu.genRequestCode",
@@ -221,6 +233,11 @@
           "command": "crabu.refreshMockTreeView",
           "when": "view == mockTreeView",
           "group": "navigation"
+        },
+        {
+          "command": "crabu.addApiToMockByUrl",
+          "when": "view == mockTreeView",
+          "group": "navigation"
         }
       ],
       "view/item/context": [
@@ -247,7 +264,12 @@
         {
           "command": "crabu.removeFromMock",
           "when": "view == mockTreeView && (viewItem == mockNode || viewItem == mockItem)",
-          "group": "inline"
+          "group": "context"
+        },
+        {
+          "command": "crabu.updateMockToLatestVersion",
+          "when": "view == mockTreeView && viewItem == mockItem",
+          "group": "context"
         },
         {
           "command": "crabu.compareWithLatestVersion",
@@ -257,7 +279,7 @@
         {
           "command": "crabu.showCrabuWebviewWithMock",
           "when": "view == mockTreeView && (viewItem == mockNode || viewItem == mockItem)",
-          "group": "context"
+          "group": "inline"
         }
       ]
     }

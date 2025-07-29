@@ -2,6 +2,7 @@ import type { TreeViewNode } from 'reactive-vscode'
 import type { ApiDetail, MockApiData } from '../types'
 import { createSingletonComposable, executeCommand, ref, useCommand, useTreeView } from 'reactive-vscode'
 import { TreeItemCollapsibleState, Uri, window, workspace } from 'vscode'
+import { config } from '../config'
 import { crabuApiBaseUrl } from '../constants/api'
 import { crabuDiffNewScheme, crabuDiffOldScheme } from '../constants/document'
 import { commands } from '../generated/meta'
@@ -96,6 +97,58 @@ export const useMockTreeView = createSingletonComposable(async () => {
     const mockItem = event.treeItem.mockItem as MockApiData
     await fetch(`${crabuApiBaseUrl}/interface/remove/${mockItem.key}`, { method: 'POST' })
     await refreshMockTreeView()
+  })
+
+  useCommand(commands.updateMockToLatestVersion, async (event) => {
+    if (!event.treeItem || !event.treeItem.mockItem) {
+      logger.error('No mock item found in the event.')
+      return
+    }
+
+    const mockItem = event.treeItem.mockItem as MockApiData
+    await executeCommand(commands.addApiToMock, {
+      treeItem: {
+        apiData: transformMockToApiData(mockItem),
+      },
+    })
+  })
+
+  useCommand(commands.addApiToMockByUrl, async () => {
+    const url = await window.showInputBox({
+      prompt: '请输入Yapi接口地址',
+      placeHolder: `例如：${config.yapiBaseUrl}/project/52/interface/api/13746`,
+      validateInput: (value) => {
+        if (!value) {
+          return '请输入Yapi接口地址'
+        }
+
+        if (!value.startsWith(config.yapiBaseUrl)) {
+          return `请输入已配置的Yapi地址：${config.yapiBaseUrl}`
+        }
+
+        return null
+      },
+    })
+
+    if (!url) {
+      return
+    }
+
+    const [project_id, id] = url.split('/').map(item => Number.parseInt(item)).filter(item => !Number.isNaN(item))
+
+    if (!project_id || !id) {
+      window.showErrorMessage('请输入正确的Yapi接口地址')
+      return
+    }
+
+    executeCommand(commands.addApiToMock, {
+      treeItem: {
+        apiData: {
+          project_id,
+          _id: id,
+        },
+      },
+    })
   })
 
   useCommand(commands.compareWithLatestVersion, async (event) => {
