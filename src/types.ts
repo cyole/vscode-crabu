@@ -54,7 +54,7 @@ export interface ApiReqQuery {
   desc: string
 }
 
-export interface ApiDetail {
+export interface YApiDetail {
   /** id */
   _id: string
   /** 项目id */
@@ -95,4 +95,11 @@ export interface ApiDetail {
   res_body_is_json_schema: boolean
   /** 接口标签 */
   tag: string[]
+}
+
+export interface ApiDetail {
+  path: string
+  tag: string[]
+  req_body: string
+  res_body: string
 }

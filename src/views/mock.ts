@@ -1,10 +1,11 @@
 import type { TreeViewNode } from 'reactive-vscode'
-import type { MockApiData } from '../types'
-import { createSingletonComposable, ref, useCommand, useTreeView } from 'reactive-vscode'
-import { TreeItemCollapsibleState, window } from 'vscode'
+import type { ApiDetail, MockApiData } from '../types'
+import { createSingletonComposable, executeCommand, ref, useCommand, useTreeView } from 'reactive-vscode'
+import { TreeItemCollapsibleState, Uri, window, workspace } from 'vscode'
 import { crabuApiBaseUrl } from '../constants/api'
+import { crabuDiffNewScheme, crabuDiffOldScheme } from '../constants/document'
 import { commands } from '../generated/meta'
-import { logger } from '../utils'
+import { logger, ofetch } from '../utils'
 import { useApiDetailView } from './crabu'
 
 export function transformMockToApiData(mockItem: MockApiData) {
@@ -29,7 +30,7 @@ function handleData(data: MockApiData[]) {
     return {
       treeItem: {
         label: item.label,
-        collapsibleState: isLeaf ? TreeItemCollapsibleState.None : TreeItemCollapsibleState.Collapsed,
+        collapsibleState: isLeaf ? TreeItemCollapsibleState.None : TreeItemCollapsibleState.Expanded,
         contextValue: isLeaf ? 'mockItem' : 'mockNode',
         mockItem: item,
       },
@@ -95,6 +96,40 @@ export const useMockTreeView = createSingletonComposable(async () => {
     const mockItem = event.treeItem.mockItem as MockApiData
     await fetch(`${crabuApiBaseUrl}/interface/remove/${mockItem.key}`, { method: 'POST' })
     await refreshMockTreeView()
+  })
+
+  useCommand(commands.compareWithLatestVersion, async (event) => {
+    if (!event.treeItem || !event.treeItem.mockItem) {
+      logger.error('No mock item found in the event.')
+      return
+    }
+
+    const mockItem = event.treeItem.mockItem as MockApiData
+    const [projectId, , interfaceId] = mockItem.key.split('/')
+    const oldDetail = await ofetch<ApiDetail>(`${crabuApiBaseUrl}/interface/local/json/${mockItem.key}`)
+    const newDetail = await ofetch<ApiDetail>(`${crabuApiBaseUrl}/interface/json/${projectId}/${interfaceId}`)
+
+    oldDetail.req_body = JSON.parse(oldDetail.req_body)
+    oldDetail.res_body = JSON.parse(oldDetail.res_body)
+    newDetail.req_body = JSON.parse(newDetail.req_body)
+    newDetail.res_body = JSON.parse(newDetail.res_body)
+
+    workspace.registerTextDocumentContentProvider(crabuDiffOldScheme, {
+      provideTextDocumentContent: () => {
+        return JSON.stringify(oldDetail, null, 2)
+      },
+    })
+
+    workspace.registerTextDocumentContentProvider(crabuDiffNewScheme, {
+      provideTextDocumentContent: () => {
+        return JSON.stringify(newDetail, null, 2)
+      },
+    })
+
+    const oldUri = Uri.parse(`${crabuDiffOldScheme}:${mockItem.label}.json`)
+    const newUri = Uri.parse(`${crabuDiffNewScheme}:${mockItem.label}.json`)
+
+    executeCommand('vscode.diff', oldUri, newUri, `检查变更：${mockItem.label}`)
   })
 
   return useTreeView(

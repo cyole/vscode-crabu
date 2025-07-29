@@ -6,7 +6,7 @@ import { displayName } from './generated/meta'
 
 export const logger = useLogger(displayName)
 
-export async function request<T>(url: string, query: Record<string, string>): Promise<T> {
+export async function fetchYapiData<T>(url: string, query: Record<string, string>): Promise<T> {
   const queryString = Object.entries(query).map(([key, value]) => `${key}=${value}`).join('&')
   const requestUrl = `${url}?${queryString}`
 
@@ -16,6 +16,17 @@ export async function request<T>(url: string, query: Record<string, string>): Pr
       'Content-Type': 'application/json',
     },
   }).then(res => res.json()) as FetchResponse<T>
+
+  return data.data
+}
+
+export async function ofetch<T>(url: string, options?: RequestInit): Promise<T> {
+  const response = await fetch(url, options)
+  const data = await response.json() as { code: number, data: T, message: string }
+
+  if (data.code !== 0) {
+    throw new Error(`${data.code} ${data.message}`)
+  }
 
   return data.data
 }

@@ -1,7 +1,7 @@
-import type { ApiDetail, YapiApiItem } from './types'
+import type { YApiDetail, YapiApiItem } from './types'
 import { config } from './config'
 import { apiDetail } from './constants/api'
-import { logger, request } from './utils'
+import { fetchYapiData, logger } from './utils'
 
 function genreateTsCode(tags: string[], path: string, reqType?: string, resType?: string) {
   const reqTypeName = /^type (.+) =/.exec(reqType ?? '')?.[1] ?? reqType
@@ -18,7 +18,7 @@ export function ${funcName}(${reqTypeName ? `params: ${reqTypeName}` : ''}) {
 
 async function getApiDetail(api: YapiApiItem) {
   const token = api.project_token ?? config.yapiProjects.find(project => project.id === api.project_id)?.token ?? ''
-  const data = await request<ApiDetail>(`${config.yapiBaseUrl}${apiDetail}`, {
+  const data = await fetchYapiData<YApiDetail>(`${config.yapiBaseUrl}${apiDetail}`, {
     id: api._id,
     token,
   })

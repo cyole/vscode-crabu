@@ -2,13 +2,12 @@ import type { TreeViewNode } from 'reactive-vscode'
 import type { ScopedConfigKeyTypeMap } from '../generated/meta'
 import type { YapiApiItem, YapiMenuData } from '../types'
 import { createSingletonComposable, executeCommand, extensionContext, ref, useCommand, useTreeView, watchEffect } from 'reactive-vscode'
-import { TreeItemCollapsibleState, window } from 'vscode'
+import { ProgressLocation, TreeItemCollapsibleState, window } from 'vscode'
 import { config } from '../config'
 import { apiListMenu, crabuApiBaseUrl } from '../constants/api'
 import { storageApiTreeDataKey, storageApiTreeDataUpdateAtKey } from '../constants/storage'
 import { commands } from '../generated/meta'
-import { logger, request } from '../utils'
-import { useApiDetailView } from './crabu'
+import { fetchYapiData, logger, ofetch } from '../utils'
 
 type Project = ScopedConfigKeyTypeMap['yapiProjects'][number]
 
@@ -18,7 +17,7 @@ async function getYapiMenuData(projectId?: number, token?: string) {
     return []
   }
 
-  const data = await request<YapiMenuData[]>(`${config.yapiBaseUrl}${apiListMenu}`, {
+  const data = await fetchYapiData<YapiMenuData[]>(`${config.yapiBaseUrl}${apiListMenu}`, {
     project_id: projectId.toString(),
     token,
   })
@@ -50,6 +49,7 @@ export const useApiTreeView = createSingletonComposable(async () => {
         label: group.name,
         description: group.desc || '',
         contextValue: 'apiGroup',
+        project,
         collapsibleState: TreeItemCollapsibleState.Collapsed,
       },
       children: group.list.map((item) => {
@@ -111,9 +111,48 @@ export const useApiTreeView = createSingletonComposable(async () => {
 
     const api = event.treeItem.apiData as YapiApiItem
 
-    await fetch(`${crabuApiBaseUrl}/interface/add/${api.project_id}/${api._id}`, { method: 'POST' })
+    await ofetch(`${crabuApiBaseUrl}/interface/add/${api.project_id}/${api._id}`, { method: 'POST' })
     await executeCommand(commands.refreshMockTreeView)
-    useApiDetailView(api)
+  })
+
+  useCommand(commands.addApiGroupToMock, async (event) => {
+    if (!event || !event.children) {
+      logger.error('No API data found in the event tree item.')
+    }
+
+    const children = event.children as { treeItem: { apiData: YapiApiItem } }[]
+    const apiList = children.map(child => child.treeItem.apiData)
+
+    const totalCount = apiList.length
+    let failedCount = 0
+
+    await window.withProgress({
+      location: ProgressLocation.Notification,
+      cancellable: true,
+    }, async (progress) => {
+      progress.report({ message: '正在导入API...' })
+
+      for (let i = 0; i < totalCount; i++) {
+        const api = apiList[i]
+
+        try {
+          await ofetch(`${crabuApiBaseUrl}/interface/add/${api.project_id}/${api._id}`, { method: 'POST' })
+          progress.report({
+            message: `正在导入API... ${i + 1}/${totalCount}`,
+            increment: (i / totalCount) * 100,
+          })
+        }
+        catch {
+          failedCount++
+        }
+      }
+    })
+
+    window.showInformationMessage(`共导入 ${apiList.length} 个接口，${failedCount} 个接口导入失败`)
+
+    await executeCommand(commands.refreshMockTreeView)
+
+    logger.info(`addApiGroupToMock: ${JSON.stringify(apiList, null, 2)}`)
   })
 
   useCommand(commands.searchApi, async () => {
@@ -172,6 +211,44 @@ export const useApiTreeView = createSingletonComposable(async () => {
       return
 
     executeCommand(action.value, selection?.node)
+  })
+
+  useCommand(commands.searchApiGroup, async () => {
+    const searchTerm = await window.showInputBox({
+      prompt: '请输入API分组名称进行搜索',
+      placeHolder: '例如：订单',
+    })
+
+    if (!searchTerm)
+      return
+
+    const resolvedRoots = await Promise.all(
+      roots.value.map(async root => ({
+        ...root,
+        children: root.children instanceof Promise ? await root.children : root.children,
+      })),
+    )
+
+    const results = resolvedRoots.flatMap(root => root.children || [])
+      .filter(node => node.treeItem.label.includes(searchTerm))
+
+    if (results.length === 0) {
+      window.showInformationMessage('未找到匹配的API分组')
+      return
+    }
+
+    const selection = await window.showQuickPick(results.map(node => ({
+      node,
+      label: `${node.treeItem.project.name}: ${node.treeItem.label}`,
+      description: node.treeItem.description,
+    })), {
+      placeHolder: '选择一个API分组',
+      matchOnDescription: true,
+    })
+
+    logger.info(`选择了API分组: ${JSON.stringify(selection, null, 2)}`)
+
+    executeCommand(commands.addApiGroupToMock, selection?.node)
   })
 
   return useTreeView(
