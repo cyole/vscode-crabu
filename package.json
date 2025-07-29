@@ -78,6 +78,11 @@
         "category": "Crabu"
       },
       {
+        "command": "crabu.switchMockStatus",
+        "title": "Switch Mock Status",
+        "category": "Crabu"
+      },
+      {
         "command": "crabu.addApiToMock",
         "title": "Add API to Mock",
         "icon": "$(plus)",

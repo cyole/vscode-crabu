@@ -3,14 +3,16 @@ import { defineExtension, useCommand } from 'reactive-vscode'
 import { window } from 'vscode'
 import { genRequestCode, genTypeScriptTypes } from './gen'
 import { commands } from './generated/meta'
+import { useCrabuMockStatus } from './status'
 import { logger } from './utils'
 import { useApiTreeView } from './views/api'
 import { useApiDetailView } from './views/crabu'
 import { transformMockToApiData, useMockTreeView } from './views/mock'
 
-const { activate, deactivate } = defineExtension(() => {
+const { activate, deactivate } = defineExtension(async () => {
   useApiTreeView()
   useMockTreeView()
+  useCrabuMockStatus()
 
   useCommand(commands.genRequestCode, async (event) => {
     if (!event.treeItem) {

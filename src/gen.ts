@@ -1,4 +1,4 @@
-import type { YApiDetail, YapiApiItem } from './types'
+import type { YapiApiItem, YApiDetail } from './types'
 import { config } from './config'
 import { apiDetail } from './constants/api'
 import { fetchYapiData, logger } from './utils'

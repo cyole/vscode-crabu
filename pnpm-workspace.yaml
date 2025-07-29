@@ -4,7 +4,7 @@ packages:
 catalogs:
   build:
     '@tomjs/vscode-extension-webview': ^2.0.0
-    '@vitejs/plugin-vue': ^6.0.0
+    '@vitejs/plugin-vue': ^6.0.1
     '@vitejs/plugin-vue-jsx': ^5.0.1
     tsdown: ^0.13.0
     unocss: ^66.3.3
@@ -16,7 +16,7 @@ catalogs:
     '@antfu/eslint-config': ^5.0.0
     '@antfu/ni': ^25.0.0
     '@vscode/vsce': ^3.6.0
-    bumpp: ^10.2.0
+    bumpp: ^10.2.1
     eslint: ^9.32.0
     esno: ^4.8.0
     pnpm: ^10.13.1
@@ -25,7 +25,7 @@ catalogs:
     vscode-ext-gen: ^1.1.0
 
   frontend:
-    '@vueuse/core': ^13.5.0
+    '@vueuse/core': ^13.6.0
     dayjs: ^1.11.13
     naive-ui: ^2.42.0
     vue: ^3.5.18
