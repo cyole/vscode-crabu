@@ -1,5 +1,5 @@
 import { computed, ref, useCommand, useStatusBarItem } from 'reactive-vscode'
-import { StatusBarAlignment, ThemeColor } from 'vscode'
+import { StatusBarAlignment, ThemeColor, window } from 'vscode'
 import { crabuApiBaseUrl } from './constants/api'
 import { commands } from './generated/meta'
 import { logger, ofetch, sleep } from './utils'
@@ -29,6 +29,12 @@ export async function useCrabuMockStatus() {
     text: statusBarItemText,
     color: statusBarItemColor,
     command: commands.switchMockStatus,
+  })
+
+  window.onDidChangeWindowState((e) => {
+    if (e.focused) {
+      updateCrabuMockStatus()
+    }
   })
 
   useCommand(commands.switchMockStatus, async () => {
