@@ -5,7 +5,7 @@ import { ofetch } from './utils'
 function generateTsTypeCode(node: any, records: string[], depth = 0): string {
   let res = ''
 
-  let name = (node as any).tname?.split('/').pop()
+  let name = (node as any).class?.split('/').pop()
   name = name?.split('(')?.[0]
   if (name) {
     name = name[0].toUpperCase() + name.slice(1)
@@ -54,7 +54,7 @@ function generateTsTypeCode(node: any, records: string[], depth = 0): string {
   return res
 }
 
-export function genreateRequestCode(tags: string[], path: string, ns: string, reqType?: string, resType?: string) {
+export function genreateRequestCode(tags: string[], path: string, ns?: string, reqType?: string, resType?: string) {
   const reqTypeName = /^type (.+) =/.exec(reqType ?? '')?.[1] ?? reqType
   const resTypeName = /^type (.+) =/.exec(resType ?? '')?.[1] ?? resType
   const funcName = path.split('/').pop()!
@@ -74,14 +74,14 @@ async function getApiDetail(api: YapiApiItem) {
   return info
 }
 
-export async function genCode(api: YapiApiItem, ns: string) {
+export async function genCode(api: YapiApiItem, ns?: string) {
   const apiDetail = await getApiDetail(api)
   const { tags, path, req_body, res_body } = apiDetail
 
   const reqTypes: string[] = []
 
   if (req_body) {
-    req_body.tname = req_body.tname ?? `${path}Req`
+    req_body.class = req_body.class ?? `${path}Req`
 
     const str = generateTsTypeCode(req_body, reqTypes)
     if (str && reqTypes.length === 0) {
@@ -94,7 +94,7 @@ export async function genCode(api: YapiApiItem, ns: string) {
   const data = res_body.children.find((node: any) => node.key.value === 'data').value
   if (data) {
     if (data.type !== 'Literal') {
-      data.tname = data.tname ?? `${path}Res`
+      data.class = data.class ?? `${path}Res`
     }
 
     const str = generateTsTypeCode(data, resTypes)

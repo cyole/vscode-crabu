@@ -9,6 +9,20 @@ import { useApiTreeView } from './views/api'
 import { useApiDetailView } from './views/crabu'
 import { transformMockToApiData, useMockTreeView } from './views/mock'
 
+async function createTempDoc(api: YapiApiItem) {
+  const resultCode = await genCode(api)
+
+  const tempDoc = await workspace.openTextDocument({
+    language: 'typescript',
+    content: `
+    ${resultCode.requestCode}
+    ${resultCode.typesCode}
+    `,
+  })
+
+  await window.showTextDocument(tempDoc)
+}
+
 const { activate, deactivate } = defineExtension(async () => {
   useApiTreeView()
   useMockTreeView()
@@ -35,6 +49,7 @@ const { activate, deactivate } = defineExtension(async () => {
     const currentDocument = currentEditor?.value?.document
     if (!currentDocument) {
       logger.error('No active text editor found.')
+      await createTempDoc(api)
       return
     }
 
@@ -45,7 +60,8 @@ const { activate, deactivate } = defineExtension(async () => {
     const dtsFile = files.find(file => file[0].endsWith('.d.ts') && file[1] === FileType.File)
 
     if (!dtsFile) {
-      logger.error('No dts file found.')
+      logger.error('No dts file found. create empty file.')
+      await createTempDoc(api)
       return
     }
 
