@@ -119,15 +119,9 @@
         "enablement": "view == mockTreeView && viewItem == mockItem"
       },
       {
-        "command": "crabu.genRequestCode",
-        "title": "Generate Request Code",
+        "command": "crabu.genBusinessCode",
+        "title": "Generate Business Code",
         "icon": "$(code)",
-        "enablement": "viewItem == apiItem || viewItem == mockItem"
-      },
-      {
-        "command": "crabu.genTypeScriptTypes",
-        "title": "Generate TypeScript Types",
-        "icon": "$(file-code)",
         "enablement": "viewItem == apiItem || viewItem == mockItem"
       },
       {
@@ -252,12 +246,7 @@
           "group": "inline"
         },
         {
-          "command": "crabu.genRequestCode",
-          "when": "viewItem == apiItem || viewItem == mockItem",
-          "group": "inline"
-        },
-        {
-          "command": "crabu.genTypeScriptTypes",
+          "command": "crabu.genBusinessCode",
           "when": "viewItem == apiItem || viewItem == mockItem",
           "group": "inline"
         },
@@ -274,7 +263,7 @@
         {
           "command": "crabu.compareWithLatestVersion",
           "when": "view == mockTreeView && viewItem == mockItem",
-          "group": "context"
+          "group": "inline"
         },
         {
           "command": "crabu.showCrabuWebviewWithMock",

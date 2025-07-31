@@ -99,7 +99,14 @@ export interface YApiDetail {
 
 export interface ApiDetail {
   path: string
-  tag: string[]
+  tags: string[]
   req_body: string
   res_body: string
+}
+
+export interface ApiDetailRaw {
+  path: string
+  tags: string[]
+  req_body: any
+  res_body: any
 }

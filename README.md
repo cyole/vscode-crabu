@@ -35,8 +35,7 @@ A VS Code extension for managing and generating code from YAPI APIs.
 | `crabu.removeFromMock`            | Remove API from Mock                 |
 | `crabu.showCrabuWebviewWithMock`  | Show Crabu Webview with Mock         |
 | `crabu.updateMockToLatestVersion` | Update Mock to Latest Version        |
-| `crabu.genRequestCode`            | Generate Request Code                |
-| `crabu.genTypeScriptTypes`        | Generate TypeScript Types            |
+| `crabu.genBusinessCode`           | Generate Business Code               |
 | `crabu.compareWithLatestVersion`  | Compare with Latest Version          |
 
 <!-- commands -->

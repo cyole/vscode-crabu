@@ -198,8 +198,7 @@ export const useApiTreeView = createSingletonComposable(async () => {
     const action = await window.showQuickPick(
       [
         { label: '添加到Mock', value: commands.addApiToMock },
-        { label: '生成请求代码', value: commands.genRequestCode },
-        { label: '生成TypeScript类型', value: commands.genTypeScriptTypes },
+        { label: '生成请求业务代码', value: commands.genBusinessCode },
         { label: '对比最新版本', value: commands.compareWithLatestVersion },
       ],
       {
