@@ -1,5 +1,5 @@
 import { defineExtension } from 'reactive-vscode'
-import { useAnnotations } from './annotation'
+import { useAnnotations } from './annotations'
 import { useCommands } from './commands'
 import { useCrabuMockStatus } from './status'
 import { useApiTreeView } from './views/api'
