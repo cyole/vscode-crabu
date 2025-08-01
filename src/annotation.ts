@@ -3,6 +3,7 @@ import type { DecorationOptions } from 'vscode'
 import type { YapiApiItem } from './types'
 import { extensionContext, ref, shallowRef, useActiveEditorDecorations, useActiveTextEditor, useTextEditorSelections, watchEffect } from 'reactive-vscode'
 import { Range } from 'vscode'
+import { config } from './config'
 import { storageApiTreeDataKey } from './constants/storage'
 
 export async function useAnnotations() {
@@ -10,7 +11,6 @@ export async function useAnnotations() {
   const selections = useTextEditorSelections(editor)
 
   const decorationsOverride = shallowRef<DecorationOptions[]>([])
-  const decorationsHover = shallowRef<DecorationOptions[]>([])
   const allApiData = ref<YapiApiItem[]>([])
 
   const storageApiTreeData = extensionContext.value?.globalState.get<TreeViewNode[]>(storageApiTreeDataKey) ?? []
@@ -40,9 +40,8 @@ export async function useAnnotations() {
 
   // calculate decorations
   watchEffect(async () => {
-    if (!editor.value || !editor.value.document) {
+    if (!config.annotations || !editor.value || !editor.value.document) {
       decorationsOverride.value = []
-      decorationsHover.value = []
       return
     }
 
@@ -90,8 +89,8 @@ export async function useAnnotations() {
         renderOptions: {
           after: {
             contentText: title,
-            color: '#9D5BF4',
-            backgroundColor: `#9D5BF420; border-radius: 0.2em; padding: 0 0.2em;`,
+            color: config.annotationColor,
+            backgroundColor: `${config.annotationColor}20; border-radius: 0.2em; padding: 0 0.2em;`,
           },
         },
       }
