@@ -110,9 +110,9 @@ export async function genCode(api: YapiApiItem, ns?: string) {
   return {
     requestCode,
     typesCode: `
-    ${reqTypes.join('\n')}
+${reqTypes.join('\n')}
     
-    ${resTypes.join('\n')}
+${resTypes.join('\n')}
 `,
   }
 }
