@@ -1,4 +1,5 @@
 import { defineExtension } from 'reactive-vscode'
+import { useAnnotations } from './annotation'
 import { useCommands } from './commands'
 import { useCrabuMockStatus } from './status'
 import { useApiTreeView } from './views/api'
@@ -9,6 +10,8 @@ const { activate, deactivate } = defineExtension(async () => {
   useMockTreeView()
   useCrabuMockStatus()
   useCommands()
+
+  useAnnotations()
 })
 
 export { activate, deactivate }
