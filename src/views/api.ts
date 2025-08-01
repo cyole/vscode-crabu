@@ -139,7 +139,7 @@ export const useApiTreeView = createSingletonComposable(async () => {
           await ofetch(`${crabuApiBaseUrl}/interface/add/${api.project_id}/${api._id}`, { method: 'POST' })
           progress.report({
             message: `正在导入API... ${i + 1}/${totalCount}`,
-            increment: (i / totalCount) * 100,
+            increment: 100 / totalCount,
           })
         }
         catch {
