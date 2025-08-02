@@ -11,9 +11,9 @@ function generateTsTypeCode(node: any, records: string[], depth = 0): string {
     name = name[0].toUpperCase() + name.slice(1)
     res += `type ${name} = `
 
-    if (node.type === 'Array') {
-      depth -= 1
-    }
+    // if (node.type === 'Array') {
+    //   depth -= 1
+    // }
   }
   if (node.type === 'Object') {
     res += '{\n'
@@ -31,7 +31,7 @@ function generateTsTypeCode(node: any, records: string[], depth = 0): string {
         res += `${'    '.repeat(depth + 1)}${key}${required}: ${type};\n`
       }
     }
-    res += `${'    '.repeat(depth)}}`
+    res += `${'    '.repeat(depth)}}\n`
 
     if (name) {
       records.push(res)
@@ -41,6 +41,10 @@ function generateTsTypeCode(node: any, records: string[], depth = 0): string {
   else if (node.type === 'Array') {
     res += generateTsTypeCode(node.children[0], records, depth)
     res += '[]'
+
+    if (res.startsWith('type ')) {
+      records.push(res)
+    }
   }
   else {
     if (node.value === 'integer') {
@@ -81,7 +85,7 @@ export async function genCode(api: YapiApiItem, ns?: string) {
   const reqTypes: string[] = []
 
   if (req_body) {
-    req_body.class = req_body.class ?? `${path}Req`
+    req_body.class = req_body.class ?? `${path.split('/').pop()}Req`
 
     const str = generateTsTypeCode(req_body, reqTypes)
     if (str && reqTypes.length === 0) {
@@ -94,7 +98,7 @@ export async function genCode(api: YapiApiItem, ns?: string) {
   const data = res_body.children.find((node: any) => node.key.value === 'data').value
   if (data) {
     if (data.type !== 'Literal') {
-      data.class = data.class ?? `${path}Res`
+      data.class = data.class ?? `${path.split('/').pop()}Res`
     }
 
     const str = generateTsTypeCode(data, resTypes)
@@ -110,8 +114,7 @@ export async function genCode(api: YapiApiItem, ns?: string) {
   return {
     requestCode,
     typesCode: `
-${reqTypes.join('\n')}
-    
+${reqTypes.join('\n')}    
 ${resTypes.join('\n')}
 `,
   }
