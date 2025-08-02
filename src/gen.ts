@@ -72,7 +72,7 @@ export function ${funcName}(${reqTypeName ? `params: ${ns ? `${ns}.` : ''}${reqT
 }`
 }
 
-async function getApiDetail(api: YapiApiItem) {
+export async function getApiDetail(api: YapiApiItem) {
   const info = await ofetch<ApiDetailRaw>(`${crabuApiBaseUrl}/interface/raw/${api.project_id}/${api._id}`)
 
   return info

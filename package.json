@@ -129,6 +129,12 @@
         "title": "Compare with Latest Version",
         "icon": "$(diff)",
         "enablement": "view == mockTreeView && viewItem == mockItem"
+      },
+      {
+        "command": "crabu.copyApiPath",
+        "title": "Copy API Path",
+        "icon": "$(copy)",
+        "enablement": "viewItem == apiItem || viewItem == mockItem"
       }
     ],
     "configuration": {
@@ -278,6 +284,11 @@
         {
           "command": "crabu.showCrabuWebviewWithMock",
           "when": "view == mockTreeView && (viewItem == mockNode || viewItem == mockItem)",
+          "group": "inline"
+        },
+        {
+          "command": "crabu.copyApiPath",
+          "when": "viewItem == apiItem || viewItem == mockItem",
           "group": "inline"
         }
       ]

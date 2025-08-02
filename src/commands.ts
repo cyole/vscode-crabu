@@ -1,7 +1,7 @@
 import type { MockApiData, YapiApiItem } from './types'
 import { useActiveTextEditor, useCommand } from 'reactive-vscode'
-import { FileType, Position, Uri, window, workspace } from 'vscode'
-import { genCode } from './gen'
+import { env, FileType, Position, Uri, window, workspace } from 'vscode'
+import { genCode, getApiDetail } from './gen'
 import { commands } from './generated/meta'
 import { logger } from './utils'
 import { useApiDetailView } from './views/crabu'
@@ -81,5 +81,28 @@ export function useCommands() {
     })
 
     window.showTextDocument(currentDocument)
+  })
+
+  useCommand(commands.copyApiPath, async (event) => {
+    if (!event.treeItem) {
+      logger.error('No API data found in the event tree item.')
+      return
+    }
+
+    let apiPath = ''
+
+    if (event.treeItem.contextValue === 'apiItem') {
+      apiPath = (event.treeItem.apiData as YapiApiItem).path
+    }
+    else {
+      const api = transformMockToApiData(event.treeItem.mockItem as MockApiData)
+      const apiDetail = await getApiDetail(api)
+      apiPath = apiDetail.path
+    }
+
+    if (apiPath) {
+      env.clipboard.writeText(apiPath)
+      window.showInformationMessage('API路径已复制到剪贴板')
+    }
   })
 }
