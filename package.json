@@ -2,7 +2,7 @@
   "publisher": "cyole",
   "name": "crabu",
   "displayName": "Crabu",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "packageManager": "pnpm@10.13.1",
   "description": "A vscode extension for Crabu.",
