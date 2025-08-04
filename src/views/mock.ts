@@ -1,5 +1,6 @@
 import type { TreeViewNode } from 'reactive-vscode'
 import type { ApiDetail, MockApiData } from '../types'
+import { parse, stringify } from 'comment-json'
 import { createSingletonComposable, executeCommand, ref, useCommand, useTreeView } from 'reactive-vscode'
 import { TreeItemCollapsibleState, Uri, window, workspace } from 'vscode'
 import { config } from '../config'
@@ -151,6 +152,21 @@ export const useMockTreeView = createSingletonComposable(async () => {
     })
   })
 
+  useCommand(commands.aiGenerateMock, async (event) => {
+    if (!event.treeItem || !event.treeItem.mockItem) {
+      logger.error('No mock item found in the event.')
+      return
+    }
+
+    const mockItem = event.treeItem.mockItem as MockApiData
+    const [projectId, catId, interfaceId] = mockItem.key.split('/')
+    await ofetch(`${crabuApiBaseUrl}/mock/template/ai/${projectId}/${catId}/${interfaceId}`, {
+      method: 'POST',
+    })
+
+    window.showInformationMessage('正在使用AI生成Mock数据，请稍后...')
+  })
+
   useCommand(commands.compareWithLatestVersion, async (event) => {
     if (!event.treeItem || !event.treeItem.mockItem) {
       logger.error('No mock item found in the event.')
@@ -162,25 +178,25 @@ export const useMockTreeView = createSingletonComposable(async () => {
     const oldDetail = await ofetch<ApiDetail>(`${crabuApiBaseUrl}/interface/local/json/${mockItem.key}`)
     const newDetail = await ofetch<ApiDetail>(`${crabuApiBaseUrl}/interface/json/${projectId}/${interfaceId}`)
 
-    oldDetail.req_body = JSON.parse(oldDetail.req_body)
-    oldDetail.res_body = JSON.parse(oldDetail.res_body)
-    newDetail.req_body = JSON.parse(newDetail.req_body)
-    newDetail.res_body = JSON.parse(newDetail.res_body)
+    oldDetail.req_body = parse(oldDetail.req_body as string)
+    oldDetail.res_body = parse(oldDetail.res_body as string)
+    newDetail.req_body = parse(newDetail.req_body as string)
+    newDetail.res_body = parse(newDetail.res_body as string)
 
     workspace.registerTextDocumentContentProvider(crabuDiffOldScheme, {
       provideTextDocumentContent: () => {
-        return JSON.stringify(oldDetail, null, 2)
+        return stringify(oldDetail, null, 2)
       },
     })
 
     workspace.registerTextDocumentContentProvider(crabuDiffNewScheme, {
       provideTextDocumentContent: () => {
-        return JSON.stringify(newDetail, null, 2)
+        return stringify(newDetail, null, 2)
       },
     })
 
-    const oldUri = Uri.parse(`${crabuDiffOldScheme}:${mockItem.label}.json`)
-    const newUri = Uri.parse(`${crabuDiffNewScheme}:${mockItem.label}.json`)
+    const oldUri = Uri.parse(`${crabuDiffOldScheme}:${mockItem.label}.jsonc`)
+    const newUri = Uri.parse(`${crabuDiffNewScheme}:${mockItem.label}.jsonc`)
 
     executeCommand('vscode.diff', oldUri, newUri, `检查变更：${mockItem.label}`)
   })

@@ -48,7 +48,7 @@ export async function useAnnotations() {
     const { document } = editor.value
 
     const matchedApiData = allApiData.value.map((item) => {
-      const regex = new RegExp(`'${item.path}'`, 'g')
+      const regex = new RegExp(`['"\`]${item.path}['"\`]`, 'g')
       const match = regex.exec(document.getText())
 
       if (!match) {

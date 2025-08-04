@@ -6,6 +6,7 @@ catalogs:
     '@tomjs/vscode-extension-webview': ^2.0.0
     '@vitejs/plugin-vue': ^6.0.1
     '@vitejs/plugin-vue-jsx': ^5.0.1
+    comment-json: ^4.2.5
     tsdown: ^0.13.0
     unocss: ^66.3.3
     unplugin-auto-import: ^19.3.0

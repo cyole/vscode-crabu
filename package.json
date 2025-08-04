@@ -135,6 +135,12 @@
         "title": "Copy API Path",
         "icon": "$(copy)",
         "enablement": "viewItem == apiItem || viewItem == mockItem"
+      },
+      {
+        "command": "crabu.aiGenerateMock",
+        "title": "AI Generate Mock",
+        "icon": "$(copilot)",
+        "enablement": "viewItem == mockItem"
       }
     ],
     "configuration": {
@@ -268,8 +274,13 @@
         },
         {
           "command": "crabu.removeFromMock",
-          "when": "view == mockTreeView && (viewItem == mockNode || viewItem == mockItem)",
+          "when": "view == mockTreeView && viewItem == mockItem",
           "group": "context"
+        },
+        {
+          "command": "crabu.removeFromMock",
+          "when": "view == mockTreeView && viewItem == mockNode",
+          "group": "inline"
         },
         {
           "command": "crabu.updateMockToLatestVersion",
@@ -289,6 +300,11 @@
         {
           "command": "crabu.copyApiPath",
           "when": "viewItem == apiItem || viewItem == mockItem",
+          "group": "context"
+        },
+        {
+          "command": "crabu.aiGenerateMock",
+          "when": "viewItem == mockItem",
           "group": "inline"
         }
       ]
@@ -314,6 +330,7 @@
     "@types/vscode": "^1.99.3",
     "@vscode/vsce": "catalog:dev",
     "bumpp": "catalog:dev",
+    "comment-json": "catalog:build",
     "eslint": "catalog:dev",
     "esno": "catalog:dev",
     "pnpm": "catalog:dev",

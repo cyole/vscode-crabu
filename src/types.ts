@@ -1,3 +1,5 @@
+import type { CommentJSONValue } from 'comment-json'
+
 export interface FetchResponse<T> {
   data: T
   errcode: number
@@ -100,8 +102,8 @@ export interface YApiDetail {
 export interface ApiDetail {
   path: string
   tags: string[]
-  req_body: string
-  res_body: string
+  req_body: string | CommentJSONValue
+  res_body: string | CommentJSONValue
 }
 
 export interface ApiDetailRaw {
