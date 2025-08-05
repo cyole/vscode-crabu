@@ -38,6 +38,7 @@ export async function useCrabuMockStatus() {
   })
 
   const aiQueueStatusBarItemText = ref('')
+  const aiQueueStatusBarItemVisible = ref(false)
   const { pause, resume } = useTimeoutPoll(updateAiQueueStatus, 1000)
 
   async function updateAiQueueStatus() {
@@ -50,20 +51,24 @@ export async function useCrabuMockStatus() {
     if (aiQueue.processing + aiQueue.waiting === 0) {
       pause()
       aiQueueStatusBarItemText.value = ''
+      aiQueueStatusBarItemVisible.value = false
       return
     }
+    aiQueueStatusBarItemVisible.value = true
     aiQueueStatusBarItemText.value = `$(loading~spin) 进行中 ${aiQueue.processing} 排队中 ${aiQueue.waiting}`
   }
 
   useStatusBarItem({
     alignment: StatusBarAlignment.Left,
     text: aiQueueStatusBarItemText,
+    visible: aiQueueStatusBarItemVisible,
     color: new ThemeColor('statusBarItem.prominentBackground'),
   })
 
   window.onDidChangeWindowState((e) => {
     if (e.focused) {
       updateCrabuMockStatus()
+      updateAiQueueStatus()
     }
   })
 
@@ -79,7 +84,10 @@ export async function useCrabuMockStatus() {
     }
   }
 
-  watchEffect(updateCrabuMockStatus)
+  watchEffect(() => {
+    updateCrabuMockStatus()
+    updateAiQueueStatus()
+  })
 
   useCommand(commands.switchMockStatus, async () => {
     if (crabuMockStatusError.value || isSwitching)
