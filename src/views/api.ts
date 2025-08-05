@@ -1,15 +1,21 @@
 import type { TreeViewNode } from 'reactive-vscode'
 import type { ScopedConfigKeyTypeMap } from '../generated/meta'
-import type { YapiApiItem, YapiMenuData } from '../types'
+import type { MockApiData, YapiApiItem, YapiMenuData } from '../types'
 import { createSingletonComposable, executeCommand, extensionContext, ref, useCommand, useTreeView, watchEffect } from 'reactive-vscode'
 import { ProgressLocation, TreeItemCollapsibleState, window } from 'vscode'
 import { config } from '../config'
-import { apiListMenu, crabuApiBaseUrl } from '../constants/api'
-import { storageApiTreeDataKey, storageApiTreeDataUpdateAtKey } from '../constants/storage'
+import { apiListMenu, storageApiTreeDataKey, storageApiTreeDataUpdateAtKey } from '../constants'
 import { commands } from '../generated/meta'
 import { fetchYapiData, logger, ofetch } from '../utils'
 
 type Project = ScopedConfigKeyTypeMap['yapiProjects'][number]
+
+export function transformApiToMock(api: YapiApiItem): MockApiData {
+  return {
+    label: api.title,
+    key: `${api.project_id}/${api.catid}/${api._id}`,
+  }
+}
 
 async function getYapiMenuData(projectId?: number, token?: string) {
   if (!projectId || !token) {
@@ -111,8 +117,9 @@ export const useApiTreeView = createSingletonComposable(async () => {
 
     const api = event.treeItem.apiData as YapiApiItem
 
-    await ofetch(`${crabuApiBaseUrl}/interface/add/${api.project_id}/${api._id}`, { method: 'POST' })
+    await ofetch(`${config.crabuServerBaseUrl}/interface/add/${api.project_id}/${api._id}`, { method: 'POST' })
     await executeCommand(commands.refreshMockTreeView)
+    await executeCommand(commands.aiGenerateMock, { treeItem: { mockItem: transformApiToMock(api) } })
   })
 
   useCommand(commands.addApiGroupToMock, async (event) => {
@@ -136,7 +143,8 @@ export const useApiTreeView = createSingletonComposable(async () => {
         const api = apiList[i]
 
         try {
-          await ofetch(`${crabuApiBaseUrl}/interface/add/${api.project_id}/${api._id}`, { method: 'POST' })
+          await ofetch(`${config.crabuServerBaseUrl}/interface/add/${api.project_id}/${api._id}`, { method: 'POST' })
+          await executeCommand(commands.aiGenerateMock, { treeItem: { mockItem: transformApiToMock(api) } })
           progress.report({
             message: `正在导入API... ${i + 1}/${totalCount}`,
             increment: 100 / totalCount,

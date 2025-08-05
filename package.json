@@ -182,6 +182,11 @@
           "type": "string",
           "default": "#9D5BF4",
           "description": "接口注解的颜色"
+        },
+        "crabu.crabuServerBaseUrl": {
+          "type": "string",
+          "default": "http://localhost/api",
+          "description": "Crabu服务的baseUrl"
         }
       }
     },

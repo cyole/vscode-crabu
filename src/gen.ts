@@ -1,5 +1,5 @@
 import type { ApiDetailRaw, YapiApiItem } from './types'
-import { crabuApiBaseUrl } from './constants/api'
+import { config } from './config'
 import { ofetch } from './utils'
 
 function generateTsTypeCode(node: any, records: string[], depth = 0): string {
@@ -73,7 +73,7 @@ export function ${funcName}(${reqTypeName ? `params: ${ns ? `${ns}.` : ''}${reqT
 }
 
 export async function getApiDetail(api: YapiApiItem) {
-  const info = await ofetch<ApiDetailRaw>(`${crabuApiBaseUrl}/interface/raw/${api.project_id}/${api._id}`)
+  const info = await ofetch<ApiDetailRaw>(`${config.crabuServerBaseUrl}/interface/raw/${api.project_id}/${api._id}`)
 
   return info
 }

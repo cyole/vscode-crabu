@@ -4,7 +4,7 @@ import type { YapiApiItem } from './types'
 import { extensionContext, ref, shallowRef, useActiveEditorDecorations, useActiveTextEditor, useTextEditorSelections, watchEffect } from 'reactive-vscode'
 import { Range } from 'vscode'
 import { config } from './config'
-import { storageApiTreeDataKey } from './constants/storage'
+import { storageApiTreeDataKey } from './constants'
 
 export async function useAnnotations() {
   const editor = useActiveTextEditor()

@@ -4,8 +4,7 @@ import { parse, stringify } from 'comment-json'
 import { createSingletonComposable, executeCommand, ref, useCommand, useTreeView } from 'reactive-vscode'
 import { TreeItemCollapsibleState, Uri, window, workspace } from 'vscode'
 import { config } from '../config'
-import { crabuApiBaseUrl } from '../constants/api'
-import { crabuDiffNewScheme, crabuDiffOldScheme } from '../constants/document'
+import { crabuDiffNewScheme, crabuDiffOldScheme } from '../constants'
 import { commands } from '../generated/meta'
 import { logger, ofetch } from '../utils'
 import { useApiDetailView } from './crabu'
@@ -52,7 +51,7 @@ export const useMockTreeView = createSingletonComposable(async () => {
 
   async function getRootNode() {
     try {
-      const resp = await fetch(`${crabuApiBaseUrl}/interface/list`)
+      const resp = await fetch(`${config.crabuServerBaseUrl}/interface/list`)
       const data = (await resp.json()) as { data: MockApiData[] }
 
       // 递归处理数据
@@ -96,7 +95,7 @@ export const useMockTreeView = createSingletonComposable(async () => {
     }
 
     const mockItem = event.treeItem.mockItem as MockApiData
-    await fetch(`${crabuApiBaseUrl}/interface/remove/${mockItem.key}`, { method: 'POST' })
+    await fetch(`${config.crabuServerBaseUrl}/interface/remove/${mockItem.key}`, { method: 'POST' })
     await refreshMockTreeView()
   })
 
@@ -160,11 +159,9 @@ export const useMockTreeView = createSingletonComposable(async () => {
 
     const mockItem = event.treeItem.mockItem as MockApiData
     const [projectId, catId, interfaceId] = mockItem.key.split('/')
-    await ofetch(`${crabuApiBaseUrl}/mock/template/ai/${projectId}/${catId}/${interfaceId}`, {
+    await ofetch(`${config.crabuServerBaseUrl}/mock/template/ai/${projectId}/${catId}/${interfaceId}`, {
       method: 'POST',
     })
-
-    window.showInformationMessage('正在使用AI生成Mock数据，请稍后...')
   })
 
   useCommand(commands.compareWithLatestVersion, async (event) => {
@@ -175,8 +172,8 @@ export const useMockTreeView = createSingletonComposable(async () => {
 
     const mockItem = event.treeItem.mockItem as MockApiData
     const [projectId, , interfaceId] = mockItem.key.split('/')
-    const oldDetail = await ofetch<ApiDetail>(`${crabuApiBaseUrl}/interface/local/json/${mockItem.key}`)
-    const newDetail = await ofetch<ApiDetail>(`${crabuApiBaseUrl}/interface/json/${projectId}/${interfaceId}`)
+    const oldDetail = await ofetch<ApiDetail>(`${config.crabuServerBaseUrl}/interface/local/json/${mockItem.key}`)
+    const newDetail = await ofetch<ApiDetail>(`${config.crabuServerBaseUrl}/interface/json/${projectId}/${interfaceId}`)
 
     oldDetail.req_body = parse(oldDetail.req_body as string)
     oldDetail.res_body = parse(oldDetail.res_body as string)

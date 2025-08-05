@@ -1,18 +1,18 @@
-import { computed, ref, useCommand, useStatusBarItem } from 'reactive-vscode'
+import { computed, ref, useCommand, useStatusBarItem, watchEffect } from 'reactive-vscode'
 import { StatusBarAlignment, ThemeColor, window } from 'vscode'
-import { crabuApiBaseUrl } from './constants/api'
+import { config } from './config'
 import { commands } from './generated/meta'
 import { logger, ofetch, sleep } from './utils'
 
 export async function useCrabuMockStatus() {
   let isSwitching = false
   const crabuMockStatus = ref(false)
-
-  async function updateCrabuMockStatus() {
-    crabuMockStatus.value = await ofetch<boolean>(`${crabuApiBaseUrl}/mock/status`)
-  }
+  const crabuMockStatusError = ref(false)
 
   const statusBarItemText = computed(() => {
+    if (crabuMockStatusError.value)
+      return 'Crabu 服务异常'
+
     return crabuMockStatus.value ? 'Mock 已启动' : 'Mock 未启动'
   })
 
@@ -22,12 +22,17 @@ export async function useCrabuMockStatus() {
       : undefined
   })
 
-  await updateCrabuMockStatus()
+  const statusBarItemBackgroundColor = computed(() => {
+    return crabuMockStatusError.value
+      ? new ThemeColor('statusBarItem.warningBackground')
+      : undefined
+  })
 
   const statusBarItem = useStatusBarItem({
     alignment: StatusBarAlignment.Left,
     text: statusBarItemText,
     color: statusBarItemColor,
+    backgroundColor: statusBarItemBackgroundColor,
     command: commands.switchMockStatus,
   })
 
@@ -37,14 +42,28 @@ export async function useCrabuMockStatus() {
     }
   })
 
+  async function updateCrabuMockStatus() {
+    logger.info('更新 Mock 状态中...')
+    try {
+      crabuMockStatus.value = await ofetch<boolean>(`${config.crabuServerBaseUrl}/mock/status`)
+      crabuMockStatusError.value = false
+    }
+    catch (error) {
+      logger.error('获取 Mock 状态失败：', error)
+      crabuMockStatusError.value = true
+    }
+  }
+
+  watchEffect(updateCrabuMockStatus)
+
   useCommand(commands.switchMockStatus, async () => {
-    if (isSwitching)
+    if (crabuMockStatusError.value || isSwitching)
       return
 
     isSwitching = true
     statusBarItem.text = `$(loading~spin) ${crabuMockStatus.value ? '停止中...' : '启动中...'}`
     await sleep(1000)
-    await ofetch(`${crabuApiBaseUrl}/mock/on`, {
+    await ofetch(`${config.crabuServerBaseUrl}/mock/on`, {
       method: 'POST',
     })
     await updateCrabuMockStatus()

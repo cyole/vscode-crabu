@@ -22,14 +22,12 @@ catalogs:
     esno: ^4.8.0
     pnpm: ^10.14.0
     reactive-vscode: ^0.3.1
-    typescript: ^5.9.2
+    typescript: ^5.8.3
     vscode-ext-gen: ^1.1.0
 
   frontend:
     '@vueuse/core': ^13.6.0
     dayjs: ^1.11.13
-    naive-ui: ^2.42.0
-    vue: ^3.5.18
 
   types:
     '@types/node': ^24.2.0
