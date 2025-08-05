@@ -162,6 +162,7 @@ export const useMockTreeView = createSingletonComposable(async () => {
     await ofetch(`${config.crabuServerBaseUrl}/mock/template/ai/${projectId}/${catId}/${interfaceId}`, {
       method: 'POST',
     })
+    await executeCommand(commands.updateAiQueueStatus, 'start')
   })
 
   useCommand(commands.compareWithLatestVersion, async (event) => {
