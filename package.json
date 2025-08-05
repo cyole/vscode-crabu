@@ -4,7 +4,7 @@
   "displayName": "Crabu",
   "version": "1.1.0",
   "private": true,
-  "packageManager": "pnpm@10.13.1",
+  "packageManager": "pnpm@10.14.0",
   "description": "A vscode extension for Crabu.",
   "author": "Cyole <i@cyole.me>",
   "license": "MIT",

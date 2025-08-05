@@ -7,22 +7,22 @@ catalogs:
     '@vitejs/plugin-vue': ^6.0.1
     '@vitejs/plugin-vue-jsx': ^5.0.1
     comment-json: ^4.2.5
-    tsdown: ^0.13.0
-    unocss: ^66.3.3
+    tsdown: ^0.13.3
+    unocss: ^66.4.1
     unplugin-auto-import: ^19.3.0
     unplugin-vue-components: ^28.8.0
     vite: npm:rolldown-vite@latest
 
   dev:
-    '@antfu/eslint-config': ^5.0.0
+    '@antfu/eslint-config': ^5.1.0
     '@antfu/ni': ^25.0.0
     '@vscode/vsce': ^3.6.0
-    bumpp: ^10.2.1
+    bumpp: ^10.2.2
     eslint: ^9.32.0
     esno: ^4.8.0
-    pnpm: ^10.13.1
+    pnpm: ^10.14.0
     reactive-vscode: ^0.3.1
-    typescript: ^5.8.3
+    typescript: ^5.9.2
     vscode-ext-gen: ^1.1.0
 
   frontend:
@@ -32,7 +32,7 @@ catalogs:
     vue: ^3.5.18
 
   types:
-    '@types/node': ^24.1.0
+    '@types/node': ^24.2.0
     '@types/vscode': ^1.99.3
 
 onlyBuiltDependencies:
