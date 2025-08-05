@@ -141,6 +141,11 @@
         "title": "AI Generate Mock",
         "icon": "$(copilot)",
         "enablement": "viewItem == mockItem"
+      },
+      {
+        "command": "crabu.updateAiQueueStatus",
+        "title": "Update AI Queue Status",
+        "category": "Crabu"
       }
     ],
     "configuration": {
@@ -334,6 +339,7 @@
     "@types/node": "catalog:types",
     "@types/vscode": "^1.99.3",
     "@vscode/vsce": "catalog:dev",
+    "@vueuse/core": "catalog:frontend",
     "bumpp": "catalog:dev",
     "comment-json": "catalog:build",
     "eslint": "catalog:dev",

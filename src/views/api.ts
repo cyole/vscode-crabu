@@ -120,6 +120,7 @@ export const useApiTreeView = createSingletonComposable(async () => {
     await ofetch(`${config.crabuServerBaseUrl}/interface/add/${api.project_id}/${api._id}`, { method: 'POST' })
     await executeCommand(commands.refreshMockTreeView)
     await executeCommand(commands.aiGenerateMock, { treeItem: { mockItem: transformApiToMock(api) } })
+    await executeCommand(commands.updateAiQueueStatus, 'start')
   })
 
   useCommand(commands.addApiGroupToMock, async (event) => {
@@ -145,6 +146,7 @@ export const useApiTreeView = createSingletonComposable(async () => {
         try {
           await ofetch(`${config.crabuServerBaseUrl}/interface/add/${api.project_id}/${api._id}`, { method: 'POST' })
           await executeCommand(commands.aiGenerateMock, { treeItem: { mockItem: transformApiToMock(api) } })
+          await executeCommand(commands.updateAiQueueStatus, 'start')
           progress.report({
             message: `正在导入API... ${i + 1}/${totalCount}`,
             increment: 100 / totalCount,
