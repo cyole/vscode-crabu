@@ -43,6 +43,8 @@ A VS Code extension for managing and generating code from YAPI APIs.
 | `crabu.copyApiPath`               | Copy API Path                        |
 | `crabu.aiGenerateMock`            | AI Generate Mock                     |
 | `crabu.updateAiQueueStatus`       | Crabu: Update AI Queue Status        |
+| `crabu.findInApi`                 | Crabu: Find in API                   |
+| `crabu.findInMock`                | Crabu: Find in Mock                  |
 
 <!-- commands -->
 

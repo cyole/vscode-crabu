@@ -36,12 +36,21 @@ async function getYapiMenuData(projectId?: number, token?: string) {
 export const useApiTreeView = createSingletonComposable(async () => {
   const roots = ref<TreeViewNode[]>([])
 
+  const treeView = useTreeView(
+    'apiTreeView',
+    roots,
+    {
+      showCollapseAll: true,
+    },
+  )
+
   async function getRootNode(projects: Project[]) {
     return await Promise.all(projects.map(async project => ({
       children: await getChildNodes(project),
       treeItem: {
         label: project.name,
-        collapsibleState: TreeItemCollapsibleState.Collapsed,
+        contextValue: 'apiProject',
+        collapsibleState: TreeItemCollapsibleState.Expanded,
       },
     })))
   }
@@ -258,11 +267,8 @@ export const useApiTreeView = createSingletonComposable(async () => {
     executeCommand(commands.addApiGroupToMock, selection?.node)
   })
 
-  return useTreeView(
-    'apiTreeView',
-    roots,
-    {
-      showCollapseAll: true,
-    },
-  )
+  useCommand(commands.findInApi, async () => {
+    await treeView.reveal(roots.value?.[0], { focus: true })
+    executeCommand('list.find')
+  })
 })

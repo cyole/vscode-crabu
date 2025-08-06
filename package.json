@@ -146,6 +146,20 @@
         "command": "crabu.updateAiQueueStatus",
         "title": "Update AI Queue Status",
         "category": "Crabu"
+      },
+      {
+        "command": "crabu.findInApi",
+        "title": "Find in API",
+        "icon": "$(search)",
+        "category": "Crabu",
+        "enablement": "view == apiTreeView"
+      },
+      {
+        "command": "crabu.findInMock",
+        "title": "Find in Mock",
+        "icon": "$(search)",
+        "category": "Crabu",
+        "enablement": "view == mockTreeView"
       }
     ],
     "configuration": {
@@ -231,8 +245,13 @@
     "menus": {
       "view/title": [
         {
-          "command": "crabu.searchApi",
+          "command": "crabu.findInApi",
           "when": "view == apiTreeView",
+          "group": "navigation"
+        },
+        {
+          "command": "crabu.findInMock",
+          "when": "view == mockTreeView",
           "group": "navigation"
         },
         {

@@ -1,7 +1,7 @@
 import type { TreeViewNode } from 'reactive-vscode'
 import type { ApiDetail, MockApiData } from '../types'
 import { parse, stringify } from 'comment-json'
-import { createSingletonComposable, executeCommand, ref, useCommand, useTreeView } from 'reactive-vscode'
+import { createSingletonComposable, executeCommand, ref, useCommand, useTreeView, watchEffect } from 'reactive-vscode'
 import { TreeItemCollapsibleState, Uri, window, workspace } from 'vscode'
 import { config } from '../config'
 import { crabuDiffNewScheme, crabuDiffOldScheme } from '../constants'
@@ -48,6 +48,13 @@ function handleData(data: MockApiData[]) {
 
 export const useMockTreeView = createSingletonComposable(async () => {
   const roots = ref<TreeViewNode[]>([])
+  const treeView = useTreeView(
+    'mockTreeView',
+    roots,
+    {
+      showCollapseAll: true,
+    },
+  )
 
   async function getRootNode() {
     try {
@@ -65,6 +72,7 @@ export const useMockTreeView = createSingletonComposable(async () => {
   }
 
   async function refreshMockTreeView() {
+    logger.info('refreshMockTreeView')
     window.withProgress({
       location: { viewId: 'mockTreeView' },
     }, async (progress) => {
@@ -73,7 +81,7 @@ export const useMockTreeView = createSingletonComposable(async () => {
     })
   }
 
-  await refreshMockTreeView()
+  watchEffect(refreshMockTreeView)
 
   useCommand(commands.refreshMockTreeView, refreshMockTreeView)
   useCommand(commands.showCrabuWebviewWithMock, (event) => {
@@ -199,11 +207,8 @@ export const useMockTreeView = createSingletonComposable(async () => {
     executeCommand('vscode.diff', oldUri, newUri, `检查变更：${mockItem.label}`)
   })
 
-  return useTreeView(
-    'mockTreeView',
-    roots,
-    {
-      showCollapseAll: true,
-    },
-  )
+  useCommand(commands.findInMock, async () => {
+    await treeView.reveal(roots.value?.[0], { focus: true })
+    executeCommand('list.find')
+  })
 })
