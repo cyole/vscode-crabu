@@ -72,7 +72,6 @@ export const useMockTreeView = createSingletonComposable(async () => {
   }
 
   async function refreshMockTreeView() {
-    logger.info('refreshMockTreeView')
     window.withProgress({
       location: { viewId: 'mockTreeView' },
     }, async (progress) => {
