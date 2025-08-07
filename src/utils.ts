@@ -21,7 +21,13 @@ export async function fetchYapiData<T>(url: string, query: Record<string, string
 }
 
 export async function ofetch<T>(url: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(url, options)
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options?.headers,
+    },
+  })
   const data = await response.json() as { code: number, data: T, message: string }
 
   if (data.code !== 0) {

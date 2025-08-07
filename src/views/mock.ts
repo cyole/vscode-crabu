@@ -167,6 +167,7 @@ export const useMockTreeView = createSingletonComposable(async () => {
     const mockItem = event.treeItem.mockItem as MockApiData
     const [projectId, catId, interfaceId] = mockItem.key.split('/')
     await ofetch(`${config.crabuServerBaseUrl}/mock/template/ai/${projectId}/${catId}/${interfaceId}`, {
+      body: '{}',
       method: 'POST',
     })
     await executeCommand(commands.updateAiQueueStatus, 'start')
