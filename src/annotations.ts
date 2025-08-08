@@ -1,10 +1,10 @@
 import type { TreeViewNode } from 'reactive-vscode'
 import type { DecorationOptions } from 'vscode'
 import type { YapiApiItem } from './types'
-import { extensionContext, ref, shallowRef, useActiveEditorDecorations, useActiveTextEditor, useTextEditorSelections, watchEffect } from 'reactive-vscode'
+import { ref, shallowRef, useActiveEditorDecorations, useActiveTextEditor, useTextEditorSelections, watchEffect } from 'reactive-vscode'
 import { Range } from 'vscode'
 import { config } from './config'
-import { storageApiTreeDataKey } from './constants'
+import { useApiTreeView } from './views/api'
 
 export async function useAnnotations() {
   const editor = useActiveTextEditor()
@@ -13,10 +13,10 @@ export async function useAnnotations() {
   const decorationsOverride = shallowRef<DecorationOptions[]>([])
   const allApiData = ref<YapiApiItem[]>([])
 
-  const storageApiTreeData = extensionContext.value?.globalState.get<TreeViewNode[]>(storageApiTreeDataKey) ?? []
+  const { roots: apiTreeData } = await useApiTreeView()
 
   const resolvedRoots = await Promise.all(
-    storageApiTreeData.map(async root => ({
+    apiTreeData.value.map(async root => ({
       ...root,
       children: root.children instanceof Promise ? await root.children : root.children,
     })),

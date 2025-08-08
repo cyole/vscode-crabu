@@ -1,7 +1,7 @@
 import type { TreeViewNode } from 'reactive-vscode'
 import type { ScopedConfigKeyTypeMap } from '../generated/meta'
 import type { MockApiData, YapiApiItem, YapiMenuData } from '../types'
-import { createSingletonComposable, executeCommand, extensionContext, ref, useCommand, useTreeView, watchEffect } from 'reactive-vscode'
+import { computed, createSingletonComposable, executeCommand, extensionContext, ref, useCommand, useTreeView, watchEffect } from 'reactive-vscode'
 import { ProgressLocation, TreeItemCollapsibleState, window } from 'vscode'
 import { config } from '../config'
 import { apiListMenu, storageApiTreeDataKey, storageApiTreeDataUpdateAtKey } from '../constants'
@@ -271,4 +271,8 @@ export const useApiTreeView = createSingletonComposable(async () => {
     await treeView.reveal(roots.value?.[0], { focus: true })
     executeCommand('list.find')
   })
+
+  return {
+    roots,
+  }
 })

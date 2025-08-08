@@ -58,11 +58,10 @@ export const useMockTreeView = createSingletonComposable(async () => {
 
   async function getRootNode() {
     try {
-      const resp = await fetch(`${config.crabuServerBaseUrl}/interface/list`)
-      const data = (await resp.json()) as { data: MockApiData[] }
+      const data = await ofetch<MockApiData[]>(`${config.crabuServerBaseUrl}/interface/list`)
 
       // 递归处理数据
-      const result = handleData(data.data)
+      const result = handleData(data)
       return result
     }
     catch (error) {
@@ -102,7 +101,7 @@ export const useMockTreeView = createSingletonComposable(async () => {
     }
 
     const mockItem = event.treeItem.mockItem as MockApiData
-    await fetch(`${config.crabuServerBaseUrl}/interface/remove/${mockItem.key}`, { method: 'POST' })
+    await ofetch(`${config.crabuServerBaseUrl}/interface/remove/${mockItem.key}`, { method: 'POST' })
     await refreshMockTreeView()
   })
 
@@ -211,4 +210,8 @@ export const useMockTreeView = createSingletonComposable(async () => {
     await treeView.reveal(roots.value?.[0], { focus: true })
     executeCommand('list.find')
   })
+
+  return {
+    roots,
+  }
 })

@@ -1,11 +1,11 @@
 import { useTimeoutPoll } from '@vueuse/core'
-import { computed, ref, useCommand, useStatusBarItem, watchEffect } from 'reactive-vscode'
+import { computed, createSingletonComposable, executeCommand, ref, useCommand, useStatusBarItem, watchEffect } from 'reactive-vscode'
 import { StatusBarAlignment, ThemeColor, window } from 'vscode'
 import { config } from './config'
 import { commands } from './generated/meta'
 import { logger, ofetch, sleep } from './utils'
 
-export async function useCrabuMockStatus() {
+export const useCrabuMockStatus = createSingletonComposable(async () => {
   let isSwitching = false
   const crabuMockStatus = ref(false)
   const crabuMockStatusError = ref(false)
@@ -48,12 +48,14 @@ export async function useCrabuMockStatus() {
       waiting: number
     }>(`${config.crabuServerBaseUrl}/mock/template/ai/process`)
 
+    executeCommand('crabu.refreshAiQueueTreeView')
     if (aiQueue.processing + aiQueue.waiting === 0) {
       pause()
       aiQueueStatusBarItemText.value = ''
       aiQueueStatusBarItemVisible.value = false
       return
     }
+
     aiQueueStatusBarItemVisible.value = true
     aiQueueStatusBarItemText.value = `$(loading~spin) 进行中 ${aiQueue.processing} 排队中 ${aiQueue.waiting}`
   }
@@ -115,4 +117,4 @@ export async function useCrabuMockStatus() {
       pause()
     }
   })
-}
+})

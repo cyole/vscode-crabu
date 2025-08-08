@@ -171,6 +171,18 @@
         "title": "Update Crabu Mock Status",
         "icon": "$(refresh)",
         "category": "Crabu"
+      },
+      {
+        "command": "crabu.refreshAiQueueTreeView",
+        "title": "Refresh AI Queue Tree View",
+        "icon": "$(refresh)",
+        "category": "Crabu"
+      },
+      {
+        "command": "crabu.cancelAiTask",
+        "title": "Cancel AI Task",
+        "icon": "$(close)",
+        "enablement": "view == aiQueueTreeView && viewItem == aiQueueItem"
       }
     ],
     "configuration": {
@@ -240,10 +252,19 @@
           "id": "apiTreeView",
           "name": "API",
           "icon": "resources/api.svg"
+        },
+        {
+          "id": "aiQueueTreeView",
+          "name": "AI Queue",
+          "icon": "resources/api.svg"
         }
       ]
     },
     "viewsWelcome": [
+      {
+        "view": "aiQueueTreeView",
+        "contents": "AI队列暂无任务"
+      },
       {
         "view": "apiTreeView",
         "contents": "请先在设置中配置项目列表\n [打开设置](command:workbench.action.openSettings?%5B%22crabu.yapiProjects%22%5D)"
@@ -293,6 +314,11 @@
         {
           "command": "crabu.addApiToMockByUrl",
           "when": "view == mockTreeView",
+          "group": "navigation"
+        },
+        {
+          "command": "crabu.refreshAiQueueTreeView",
+          "when": "view == aiQueueTreeView",
           "group": "navigation"
         }
       ],
@@ -345,6 +371,11 @@
         {
           "command": "crabu.aiGenerateMock",
           "when": "viewItem == mockItem",
+          "group": "inline"
+        },
+        {
+          "command": "crabu.cancelAiTask",
+          "when": "view == aiQueueTreeView && viewItem == aiQueueItem",
           "group": "inline"
         }
       ]
