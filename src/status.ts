@@ -89,6 +89,8 @@ export async function useCrabuMockStatus() {
     updateAiQueueStatus()
   })
 
+  useCommand(commands.updateCrabuMockStatus, updateCrabuMockStatus)
+
   useCommand(commands.switchMockStatus, async () => {
     if (crabuMockStatusError.value || isSwitching)
       return

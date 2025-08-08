@@ -39,6 +39,11 @@
   "contributes": {
     "commands": [
       {
+        "command": "crabu.launch",
+        "title": "Launch Crabu",
+        "category": "Crabu"
+      },
+      {
         "command": "crabu.refreshApiTreeView",
         "title": "Refresh API Tree View",
         "icon": "$(refresh)",
@@ -160,6 +165,12 @@
         "icon": "$(search)",
         "category": "Crabu",
         "enablement": "view == mockTreeView"
+      },
+      {
+        "command": "crabu.updateCrabuMockStatus",
+        "title": "Update Crabu Mock Status",
+        "icon": "$(refresh)",
+        "category": "Crabu"
       }
     ],
     "configuration": {
@@ -239,7 +250,7 @@
       },
       {
         "view": "mockTreeView",
-        "contents": "请在Crabu中添加需要mock的接口\n [打开Crabu](command:crabu.showCrabuWebview)"
+        "contents": "请在Crabu中添加需要mock的接口\n [打开Crabu](command:crabu.launch)"
       }
     ],
     "menus": {

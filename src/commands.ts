@@ -1,9 +1,10 @@
 import type { MockApiData, YapiApiItem } from './types'
-import { useActiveTextEditor, useCommand } from 'reactive-vscode'
+import { execSync } from 'node:child_process'
+import { executeCommand, useActiveTextEditor, useCommand } from 'reactive-vscode'
 import { env, FileType, Position, Uri, window, workspace } from 'vscode'
 import { genCode, getApiDetail } from './gen'
 import { commands } from './generated/meta'
-import { logger } from './utils'
+import { logger, sleep } from './utils'
 import { useApiDetailView } from './views/crabu'
 import { transformMockToApiData } from './views/mock'
 
@@ -104,5 +105,14 @@ export function useCommands() {
       env.clipboard.writeText(apiPath)
       window.showInformationMessage('API路径已复制到剪贴板')
     }
+  })
+
+  useCommand(commands.launch, async () => {
+    execSync('open /Applications/Crabu.app')
+
+    await sleep(1000)
+    window.showInformationMessage('Crabu 已启动')
+    executeCommand(commands.updateCrabuMockStatus)
+    executeCommand(commands.refreshMockTreeView)
   })
 }
