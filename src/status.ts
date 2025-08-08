@@ -64,7 +64,7 @@ export const useCrabuMockStatus = createSingletonComposable(async () => {
     alignment: StatusBarAlignment.Left,
     text: aiQueueStatusBarItemText,
     visible: aiQueueStatusBarItemVisible,
-    color: new ThemeColor('statusBarItem.prominentBackground'),
+    color: config.primaryColor,
   })
 
   window.onDidChangeWindowState((e) => {

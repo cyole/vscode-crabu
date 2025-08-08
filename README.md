@@ -14,7 +14,7 @@ A VS Code extension for managing and generating code from YAPI APIs.
 | `crabu.yapiBaseUrl`        | yapi文档的baseUrl  | `string`  | `""`                     |
 | `crabu.yapiProjects`       | yapi项目列表        | `array`   | `[]`                     |
 | `crabu.annotations`        | 是否开启接口注解        | `boolean` | `true`                   |
-| `crabu.annotationColor`    | 接口注解的颜色         | `string`  | `"#9D5BF4"`              |
+| `crabu.primaryColor`       | 主题色             | `string`  | `"#9D5BF4"`              |
 | `crabu.crabuServerBaseUrl` | Crabu服务的baseUrl | `string`  | `"http://localhost/api"` |
 
 <!-- configs -->

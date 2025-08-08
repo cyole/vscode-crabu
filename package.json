@@ -220,10 +220,10 @@
           "default": true,
           "description": "是否开启接口注解"
         },
-        "crabu.annotationColor": {
+        "crabu.primaryColor": {
           "type": "string",
           "default": "#9D5BF4",
-          "description": "接口注解的颜色"
+          "description": "主题色"
         },
         "crabu.crabuServerBaseUrl": {
           "type": "string",

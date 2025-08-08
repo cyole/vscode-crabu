@@ -89,8 +89,8 @@ export async function useAnnotations() {
         renderOptions: {
           after: {
             contentText: title,
-            color: config.annotationColor,
-            backgroundColor: `${config.annotationColor}20; border-radius: 0.2em; padding: 0 0.2em;`,
+            color: config.primaryColor,
+            backgroundColor: `${config.primaryColor}20; border-radius: 0.2em; padding: 0 0.2em;`,
           },
         },
       }
