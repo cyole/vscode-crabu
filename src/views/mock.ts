@@ -183,10 +183,10 @@ export const useMockTreeView = createSingletonComposable(async () => {
     const oldDetail = await ofetch<ApiDetail>(`${config.crabuServerBaseUrl}/interface/local/json/${mockItem.key}`)
     const newDetail = await ofetch<ApiDetail>(`${config.crabuServerBaseUrl}/interface/json/${projectId}/${interfaceId}`)
 
-    oldDetail.req_body = parse(oldDetail.req_body as string)
-    oldDetail.res_body = parse(oldDetail.res_body as string)
-    newDetail.req_body = parse(newDetail.req_body as string)
-    newDetail.res_body = parse(newDetail.res_body as string)
+    oldDetail.req_body = oldDetail.req_body ? parse(oldDetail.req_body as string) : undefined
+    oldDetail.res_body = oldDetail.res_body ? parse(oldDetail.res_body as string) : undefined
+    newDetail.req_body = newDetail.req_body ? parse(newDetail.req_body as string) : undefined
+    newDetail.res_body = newDetail.res_body ? parse(newDetail.res_body as string) : undefined
 
     workspace.registerTextDocumentContentProvider(crabuDiffOldScheme, {
       provideTextDocumentContent: () => {

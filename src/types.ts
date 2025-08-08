@@ -101,9 +101,9 @@ export interface YApiDetail {
 
 export interface ApiDetail {
   path: string
-  tags: string[]
-  req_body: string | CommentJSONValue
-  res_body: string | CommentJSONValue
+  tags?: string[]
+  req_body?: string | CommentJSONValue
+  res_body?: string | CommentJSONValue
 }
 
 export interface ApiDetailRaw {

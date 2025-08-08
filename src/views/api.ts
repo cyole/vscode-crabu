@@ -65,7 +65,7 @@ export const useApiTreeView = createSingletonComposable(async () => {
         description: group.desc || '',
         contextValue: 'apiGroup',
         project,
-        collapsibleState: TreeItemCollapsibleState.Collapsed,
+        collapsibleState: TreeItemCollapsibleState.Expanded,
       },
       children: group.list.map((item) => {
         item.project_token = project.token
